@@ -2,6 +2,80 @@
 (eval-when-compile
   (require 'use-package))
 
+;; setup for straight.el. This allows moving between computers and
+;; automatic installation of missing packages
+
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+;; install all necessary packages via straight.el package
+(straight-use-package 'el-patch)
+(straight-use-package 'org)
+(straight-use-package 'org-ac)
+(straight-use-package 'org-bullets)
+(straight-use-package 'helm)
+(straight-use-package 'helm-sage)
+(straight-use-package 'helm-pass)
+(straight-use-package 'slack)
+(straight-use-package 'magit)
+(straight-use-package 'sage-shell-mode)
+(straight-use-package 'ob-sagemath)
+(straight-use-package 'recentf)
+(straight-use-package 'recentf-ext)
+(straight-use-package 'adoc-mode)
+(straight-use-package 'verilog-mode)
+(straight-use-package 'auth-source-pass)
+(straight-use-package 'pass)
+(straight-use-package 'yasnippet-snippets)
+(straight-use-package 'ac-octave)
+(straight-use-package 'flyparens)
+(straight-use-package 'auctex)
+(straight-use-package 'auto-complete-auctex)
+(straight-use-package 'auto-complete-sage)
+(straight-use-package 'grammarly)
+(straight-use-package 'company-math)
+(straight-use-package 'flymake)
+(straight-use-package 'whole-line-or-region)
+
+
+
+
+;; helps combat screen tearing in exchange for reduced performance
+;; speed
+(setq redisplay-dont-pause t)
+
+
+
+
+
+
+
+
+
+
+
+
+
+;; Maximize window upon opening of emacs
+
+(defun maximize-frame ()
+  "Maximizes the active frame in Windows"
+  (interactive)
+  ;; Send a `WM_SYSCOMMAND' message to the active frame with the
+  ;; `SC_MAXIMIZE' parameter.
+  (when (eq system-type 'windows-nt)
+    (w32-send-sys-command 61488)))
+(add-hook 'window-setup-hook 'maximize-frame t)
 
 
 ;; -*- emacs-lisp -*-
@@ -15,9 +89,9 @@
 
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")))
-
-
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -29,11 +103,12 @@
    ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#    f6f3e8"])
  '(auth-source-debug t)
  '(auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
+ '(comment-style 'indent)
  '(company-quickhelp-color-background "#4F4F4F")
  '(company-quickhelp-color-foreground "#DCDCCC")
- '(custom-enabled-themes '(leuven org-beautify))
+ '(custom-enabled-themes '(sanityinc-tomorrow-blue org-beautify))
  '(custom-safe-themes
-   '("816bacf37139d6204b761fea0d25f7f2f43b94affa14aa4598bce46157c160c2" "68d8ceaedfb6bdd2909f34b8b51ceb96d7a43f25310a55c701811f427e9de3a3" "9685cefcb4efd32520b899a34925c476e7920725c8d1f660e7336f37d6d95764" "3f5f69bfa958dcf04066ab2661eb2698252c0e40b8e61104e3162e341cee1eb9" default))
+   '("82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "816bacf37139d6204b761fea0d25f7f2f43b94affa14aa4598bce46157c160c2" "68d8ceaedfb6bdd2909f34b8b51ceb96d7a43f25310a55c701811f427e9de3a3" "9685cefcb4efd32520b899a34925c476e7920725c8d1f660e7336f37d6d95764" "3f5f69bfa958dcf04066ab2661eb2698252c0e40b8e61104e3162e341cee1eb9" default))
  '(display-line-numbers t)
  '(epg-gpg-program "gpg2")
  '(fci-rule-color "#383838")
@@ -41,7 +116,7 @@
  '(nrepl-message-colors
    '("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3"))
  '(package-selected-packages
-   '(ob-sagemath helm-sage helm-pass auth-source-pass pass yasnippet-snippets zenburn-theme ac-octave helm flyparens leuven-theme slack auto-complete-auctex auto-complete-sage sage-shell-mode org-ac org-beautify-theme org-bullets adoc-mode grammarly org-plus-contrib company-math flymake yasnippet auctex org))
+   '(recentf-remove-sudo-tramp-prefix recentf-ext color-theme-sanityinc-tomorrow ob-sagemath helm-sage helm-pass auth-source-pass pass yasnippet-snippets zenburn-theme ac-octave helm flyparens leuven-theme slack auto-complete-auctex auto-complete-sage sage-shell-mode org-ac org-beautify-theme org-bullets adoc-mode grammarly org-plus-contrib company-math flymake yasnippet auctex org))
  '(pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
  '(tramp-default-method "plink")
  '(vc-annotate-background "#2B2B2B")
@@ -91,6 +166,9 @@ There are two things you can do about this warning:
   )
 ;;(package-initialize)
 
+
+
+
 ;; associate .txt files with asciidoc mode
 (add-to-list 'auto-mode-alist (cons "\\.txt\\'" 'adoc-mode))
 
@@ -108,9 +186,6 @@ There are two things you can do about this warning:
 ;; make pretty utf-8 style bullets in org mode
 (require 'org-bullets)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-
-
-
 
 
 ;; Hunspell setup
@@ -144,8 +219,11 @@ There are two things you can do about this warning:
 ;; adding hooks for associating octave with .m files
 (add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
 
-
-
+;; Make Octave default mode for .m files and set comment chars to % instead for cross-compatibility
+ (add-hook 'octave-mode-hook		
+    (lambda () (progn (setq octave-comment-char ?%)
+                      (setq comment-start "% ")
+                      (setq comment-add 0))))
 
 
 ;; Turn on abbrevs, auto-fill and font-lock features for octave mode
@@ -153,7 +231,7 @@ There are two things you can do about this warning:
 
 (add-hook 'octave-mode-hook
 	  (lambda ()
-	    (abbrev-mode 1)
+	    (abbrev-mode 1) 
 	    (auto-fill-mode 1)
 	    (if (eq window-system 'x)
 		(font-lock-mode 1))))
@@ -193,8 +271,8 @@ There are two things you can do about this warning:
      "C-c o"    'helm-sage-output-history))
 
 
-;; set sage executable
-(setq sage-shell:sage-root "/opt/sagemath-9.0")
+;; set sage executable (not currently working due to windows)
+; (setq sage-shell:sage-root "/opt/sagemath-9.0") 
 
 
 ;; run SageMath by M-x run-sage instead of M-x sage-shell:run-sage
@@ -222,6 +300,8 @@ There are two things you can do about this warning:
 (setq org-babel-default-header-args:sage '((:session . t)
                                            (:results . "output")))
 
+
+
 ;; C-c c for asynchronous evaluating (only for SageMath code blocks).
 (with-eval-after-load "org"
   (define-key org-mode-map (kbd "C-c c") 'ob-sagemath-execute-async))
@@ -237,3 +317,30 @@ There are two things you can do about this warning:
 
 ;; Show images after evaluating code blocks.
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+
+;; recentf package setup
+(require 'recentf)
+
+;; get rid of 'find-file-read-only' and replace with something more
+;; useful
+(global-set-key (kbd "C-x C-r") 'ido-recentf-open)
+
+;; enable recent files mode
+(recentf-mode t)
+
+;; 50 files should be more than enough
+(setq recentf-max-saved-items 50)
+
+(defun ido-recentf-open ()
+  "Use 'ido-comleting-read' to \\[find-file] a recent file"
+  (interactive)
+  (if (find-file (ido-completing-read "Find recent file: " recentf-list))
+      (message "Opening file...")
+    (message "Aborting")))
+
+;; force Ido to always create a new buffer (in C-x b) if name
+;; does not already exist.
+(setq ido-create-new-buffer 'always)
+
+
+
