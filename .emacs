@@ -46,6 +46,14 @@
 (straight-use-package 'company-math)
 (straight-use-package 'flymake)
 (straight-use-package 'whole-line-or-region)
+(straight-use-package 'cheatsheet)
+(straight-use-package 'git)
+(straight-use-package 'helm-org)
+(straight-use-package 'helm-c-moccur)
+(straight-use-package 'helm-c-yasnippet)
+(straight-use-package 'helm-bibtex)
+(straight-use-package 'helm-bibtexkey)
+
 
 
 
@@ -56,7 +64,8 @@
 
 
 
-
+;; Bind M-/ to M-x hippie-expand instead of dabbrev
+(global-set-key "\M- " 'hippie-expand)
 
 
 
@@ -103,16 +112,21 @@
    ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#    f6f3e8"])
  '(auth-source-debug t)
  '(auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
+ '(beacon-color "#cc6666")
  '(comment-style 'indent)
  '(company-quickhelp-color-background "#4F4F4F")
  '(company-quickhelp-color-foreground "#DCDCCC")
- '(custom-enabled-themes '(sanityinc-tomorrow-blue org-beautify))
+ '(custom-enabled-themes '(sanityinc-tomorrow-bright org-beautify))
  '(custom-safe-themes
-   '("82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "816bacf37139d6204b761fea0d25f7f2f43b94affa14aa4598bce46157c160c2" "68d8ceaedfb6bdd2909f34b8b51ceb96d7a43f25310a55c701811f427e9de3a3" "9685cefcb4efd32520b899a34925c476e7920725c8d1f660e7336f37d6d95764" "3f5f69bfa958dcf04066ab2661eb2698252c0e40b8e61104e3162e341cee1eb9" default))
+   '("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "816bacf37139d6204b761fea0d25f7f2f43b94affa14aa4598bce46157c160c2" "68d8ceaedfb6bdd2909f34b8b51ceb96d7a43f25310a55c701811f427e9de3a3" "9685cefcb4efd32520b899a34925c476e7920725c8d1f660e7336f37d6d95764" "3f5f69bfa958dcf04066ab2661eb2698252c0e40b8e61104e3162e341cee1eb9" default))
  '(display-line-numbers t)
  '(epg-gpg-program "gpg2")
  '(fci-rule-color "#383838")
+ '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
+ '(frame-background-mode 'dark)
+ '(global-visual-line-mode t)
  '(hl-sexp-background-color "#efebe9")
+ '(line-move-visual nil)
  '(nrepl-message-colors
    '("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3"))
  '(package-selected-packages
@@ -140,7 +154,8 @@
      (340 . "#94BFF3")
      (360 . "#DC8CC3")))
  '(vc-annotate-very-old-color "#DC8CC3")
- '(verilog-auto-arg-format 'single))
+ '(verilog-auto-arg-format 'single)
+ '(window-divider-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
