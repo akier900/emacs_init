@@ -1,6 +1,5 @@
-;; This is only needed once near the top of file. This sets up use of package 'use-package'
-(eval-when-compile
-  (require 'use-package))
+
+
 
 ;; setup for straight.el. This allows moving between computers and
 ;; automatic installation of missing packages
@@ -59,6 +58,12 @@
 
 
 
+;; This is only needed once near the top of file. This sets up use of package 'use-package'
+(eval-when-compile
+  (require 'use-package))
+
+
+
 
 
 ;; helps combat screen tearing in exchange for reduced performance
@@ -91,14 +96,6 @@
 (add-hook 'window-setup-hook 'maximize-frame t)
 
 
-;; -*- emacs-lisp -*-
-(unless package-archive-contents    ;; Refresh the packages descriptions
-  (package-refresh-contents))
-(setq package-load-list '(all))     ;; List of packages to load
-(unless (package-installed-p 'org)  ;; Make sure the Org package is
-  (package-install 'org))           ;; installed, install it if not
-(package-initialize)                ;; Initialize & Install Package
-
 
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")))
@@ -112,63 +109,35 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
- '(ansi-color-names-vector
-   ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#    f6f3e8"])
  '(auth-source-debug t)
- '(auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
- '(beacon-color "#f2777a")
- '(comment-style 'indent)
- '(company-quickhelp-color-background "#4F4F4F")
- '(company-quickhelp-color-foreground "#DCDCCC")
- '(custom-enabled-themes '(tsdh-dark))
- '(custom-safe-themes
-   '("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "816bacf37139d6204b761fea0d25f7f2f43b94affa14aa4598bce46157c160c2" "68d8ceaedfb6bdd2909f34b8b51ceb96d7a43f25310a55c701811f427e9de3a3" "9685cefcb4efd32520b899a34925c476e7920725c8d1f660e7336f37d6d95764" "3f5f69bfa958dcf04066ab2661eb2698252c0e40b8e61104e3162e341cee1eb9" default))
+ '(auth-sources (quote ("~/.authinfo.gpg" "~/.authinfo" "~/.netrc")))
+ '(comment-style (quote indent))
+ '(custom-enabled-themes (quote (leuven)))
  '(display-line-numbers t)
- '(epg-gpg-program "gpg2")
- '(fci-rule-color "#383838")
- '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
- '(frame-background-mode 'dark)
+ '(flycheck-color-mode-line-face-to-color (quote mode-line-buffer-id))
  '(global-visual-line-mode t)
- '(hl-sexp-background-color "#efebe9")
  '(inhibit-startup-screen t)
  '(line-move-visual nil)
- '(nrepl-message-colors
-   '("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3"))
- '(package-check-signature 'allow-unsigned)
+ '(package-check-signature (quote allow-unsigned))
  '(package-selected-packages
-   '(recentf-remove-sudo-tramp-prefix recentf-ext color-theme-sanityinc-tomorrow ob-sagemath helm-sage helm-pass auth-source-pass pass yasnippet-snippets zenburn-theme ac-octave helm flyparens leuven-theme slack auto-complete-auctex auto-complete-sage sage-shell-mode org-ac org-beautify-theme org-bullets adoc-mode grammarly org-plus-contrib company-math flymake yasnippet auctex org))
- '(pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
- '(sage-shell:sage-executable "C:\\Users\\Eric\\AppData\\Local\\SageMath9_0\\runtime\\bin\\bash.exe")
+   (quote
+    (recentf-remove-sudo-tramp-prefix recentf-ext color-theme-sanityinc-tomorrow ob-sagemath helm-sage helm-pass auth-source-pass pass yasnippet-snippets zenburn-theme ac-octave helm flyparens leuven-theme slack auto-complete-auctex auto-complete-sage sage-shell-mode org-ac org-beautify-theme org-bullets adoc-mode grammarly org-plus-contrib company-math flymake yasnippet auctex org)))
+ '(sage-shell:sage-executable
+   "C:\\Users\\Eric\\AppData\\Local\\SageMath9_0\\runtime\\bin\\bash.exe")
  '(tramp-default-method "plink")
- '(vc-annotate-background "#2B2B2B")
- '(vc-annotate-color-map
-   '((20 . "#BC8383")
-     (40 . "#CC9393")
-     (60 . "#DFAF8F")
-     (80 . "#D0BF8F")
-     (100 . "#E0CF9F")
-     (120 . "#F0DFAF")
-     (140 . "#5F7F5F")
-     (160 . "#7F9F7F")
-     (180 . "#8FB28F")
-     (200 . "#9FC59F")
-     (220 . "#AFD8AF")
-     (240 . "#BFEBBF")
-     (260 . "#93E0E3")
-     (280 . "#6CA0A3")
-     (300 . "#7CB8BB")
-     (320 . "#8CD0D3")
-     (340 . "#94BFF3")
-     (360 . "#DC8CC3")))
- '(vc-annotate-very-old-color "#DC8CC3")
- '(verilog-auto-arg-format 'single)
+ '(verilog-auto-arg-format (quote single))
  '(window-divider-mode nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "Consolas" :foundry "outline" :slant normal :weight normal :height 120 :width normal)))))
+
+
+ 
+
+
+
+
+
+
+
+
 
 
 (require 'package)
@@ -210,21 +179,21 @@ There are two things you can do about this warning:
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 
-;; Hunspell setup
-(add-to-list 'exec-path "C:\msys64\mingw64\bin")
-(setenv "LANG" "en_US, ru_RU")
-  (setq-default  ispell-program-name "c:/msys64/mingw64/bin/hunspell.exe")
-  (with-eval-after-load "ispell"
-    (setq ispell-really-hunspell t)
-    (setq ispell-program-name "hunspell")
-    (setq ispell-dictionary "en_US")
-    ;; ispell-set-spellchecker-params has to be called
-    ;; before ispell-hunspell-add-multi-dic will work
-    (ispell-set-spellchecker-params)
-    (ispell-hunspell-add-multi-dic "en_US"))
+;; ;; Hunspell setup
+;; (add-to-list 'exec-path "C:\msys64\mingw64\bin")
+;; (setenv "LANG" "en_US, ru_RU")
+;;   (setq-default  ispell-program-name "c:/msys64/mingw64/bin/hunspell.exe")
+;;   (with-eval-after-load "ispell"
+;;     (setq ispell-really-hunspell t)
+;;     (setq ispell-program-name "hunspell")
+;;     (setq ispell-dictionary "en_US")
+;;     ;; ispell-set-spellchecker-params has to be called
+;;     ;; before ispell-hunspell-add-multi-dic will work
+;;     (ispell-set-spellchecker-params)
+;;     (ispell-hunspell-add-multi-dic "en_US"))
 
-       (require 'ispell)
-;; Hunspell setup end
+;;        (require 'ispell)
+;; ;; Hunspell setup end
 
 
 ;; make helm configuration file neccesary
@@ -365,4 +334,13 @@ There are two things you can do about this warning:
 (setq ido-create-new-buffer 'always)
 
 
+;; Wait till package is loaded (after init is read) then
+;; load theme
+(add-hook 'after-init-hook (lambda () (load-theme 'leuven)))
 
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
