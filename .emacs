@@ -1,6 +1,3 @@
-
-
-
 ;; setup for straight.el. This allows moving between computers and
 ;; automatic installation of missing packages
 
@@ -55,7 +52,7 @@
 (straight-use-package 'helm-c-yasnippet)
 (straight-use-package 'helm-bibtex)
 (straight-use-package 'helm-bibtexkey)
-
+(straight-use-package 'spacemacs-theme)
 
 
 ;; This is only needed once near the top of file. This sets up use of package 'use-package'
@@ -113,6 +110,9 @@
  '(auth-sources (quote ("~/.authinfo.gpg" "~/.authinfo" "~/.netrc")))
  '(comment-style (quote indent))
  '(custom-enabled-themes (quote (leuven)))
+ '(custom-safe-themes
+   (quote
+    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
  '(display-line-numbers t)
  '(flycheck-color-mode-line-face-to-color (quote mode-line-buffer-id))
  '(global-visual-line-mode t)
@@ -230,17 +230,17 @@ There are two things you can do about this warning:
 (setq auth-source-debug t)
 
 
-(setq auth-sources '((:source "~/.authinfo.gpg")))
+;(setq auth-sources '((:source "~/.authinfo.gpg")))
 
 
 
-(slack-register-team
- :name "nexgarden"
- :token (auth-source-pick-first-password
-	 :host "nexgarden.slack.com"
-	 :user "akier@pdx.edu")
- :subscribed-channels '((channel1 channel2)))
-     
+;(slack-register-team
+; :name "nexgarden"
+; :token (auth-source-pick-first-password
+;	 :host "nexgarden.slack.com"
+;	 :user "akier@pdx.edu")
+; :subscribed-channels '((channel1 channel2)))
+;     
 (use-package helm-pass)
 
 
@@ -336,11 +336,27 @@ There are two things you can do about this warning:
 
 ;; Wait till package is loaded (after init is read) then
 ;; load theme
-(add-hook 'after-init-hook (lambda () (load-theme 'leuven)))
+(add-hook 'after-init-hook (lambda () (load-theme 'spacemacs-dark)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:family "Hack" :foundry "SRC" :slant normal :weight normal :height 113 :width normal)))))
+
+;; Trigger an insertion of relevant text depending on mode of
+;; new file in current buffer. system default
+(add-hook 'find-file-hook 'auto-insert)
+
+
+;; Enable YAsnippets. Add user snippets to ~/.emacs.d/snippets
+;; or invoke M-x-yas-new-snippet
+(add-to-list 'load-path
+	     "~/.emacs.d/plugins/yasnippet")
+(require 'yasnippet)
+(yas-global-mode 1)
+
+;; spell checking for latex docs
+(add-hook 'tex-mode-hook
+  #'(lambda () (setq ispell-parser 'tex)))
