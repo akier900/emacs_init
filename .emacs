@@ -313,3 +313,8 @@
    (quote
     ("ab2cbf30ab758c5e936b527377d543ce4927001742f79519b62c45ba9dd9f55e" default)))
  '(inhibit-startup-screen t))
+
+;; when 'M-x check-parens' is run, it will highlight ungrouped expression from
+;; where your cursor cucrrently is
+(show-paren-mode t)
+(setq show-paren-style 'expression)
