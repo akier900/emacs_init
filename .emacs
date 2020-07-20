@@ -1,5 +1,11 @@
+;; Set cursor color to nice orange
+(set-cursor-color "#ff5733")
+
+
 ;; setup for straight.el. This allows moving between computers and
 ;; automatic installation of missing packages
+
+
 
 
 ;; This bootsrap snippet allows straignt.el to install itself with some magic.
@@ -296,4 +302,5 @@
  '(custom-safe-themes
    (quote
     ("ab2cbf30ab758c5e936b527377d543ce4927001742f79519b62c45ba9dd9f55e" default)))
- '(inhibit-startup-screen t))
+ '(inhibit-startup-screen t)
+ '(straight-use-package-by-default t))	; tells use-package to defer to straight.el as it's default package manager for installs.
