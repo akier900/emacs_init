@@ -1,6 +1,6 @@
-;; Set cursor color to nice orange
-(setq default-frame-alist
-       '((cursor-color . "ff5733")))
+;; Set cursor color
+(set-cursor-color "DarkOrchid3")
+
 
 
 ;; setup for straight.el. This allows moving between computers and
@@ -295,13 +295,21 @@
 ;; spell checking for latex docs
 (add-hook 'tex-mode-hook
   #'(lambda () (setq ispell-parser 'tex)))
+
+
+
+
+
+
+ '(straight-use-package-by-default t)
+ ;; tells use-package to defer to straight.el as it's default package manager for installs.
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes (quote (spacemacs-dark)))
  '(custom-safe-themes
    (quote
     ("ab2cbf30ab758c5e936b527377d543ce4927001742f79519b62c45ba9dd9f55e" default)))
- '(inhibit-startup-screen t)
- '(straight-use-package-by-default t))	; tells use-package to defer to straight.el as it's default package manager for installs.
+ '(inhibit-startup-screen t))
