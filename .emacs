@@ -60,9 +60,6 @@
   (require 'use-package))
 
 
-
-
-
 ;; helps combat screen tearing in exchange for reduced performance
 ;; speed
 (setq redisplay-dont-pause t)
@@ -78,9 +75,6 @@
 (setq tooltip-use-echo-area t) 
 
 
-
-
-
 ;; Maximize window upon opening of emacs
 
 (defun maximize-frame ()
@@ -91,72 +85,6 @@
   (when (eq system-type 'windows-nt)
     (w32-send-sys-command 61488)))
 (add-hook 'window-setup-hook 'maximize-frame t)
-
-
-
-(setq package-archives
-      '(("gnu" . "https://elpa.gnu.org/packages/")))
-(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
-
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(auth-source-debug t)
- '(auth-sources (quote ("~/.authinfo.gpg" "~/.authinfo" "~/.netrc")))
- '(comment-style (quote indent))
- '(custom-enabled-themes (quote (leuven)))
- '(custom-safe-themes
-   (quote
-    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
- '(display-line-numbers t)
- '(flycheck-color-mode-line-face-to-color (quote mode-line-buffer-id))
- '(global-visual-line-mode t)
- '(inhibit-startup-screen t)
- '(line-move-visual nil)
- '(package-check-signature (quote allow-unsigned))
- '(package-selected-packages
-   (quote
-    (recentf-remove-sudo-tramp-prefix recentf-ext color-theme-sanityinc-tomorrow ob-sagemath helm-sage helm-pass auth-source-pass pass yasnippet-snippets zenburn-theme ac-octave helm flyparens leuven-theme slack auto-complete-auctex auto-complete-sage sage-shell-mode org-ac org-beautify-theme org-bullets adoc-mode grammarly org-plus-contrib company-math flymake yasnippet auctex org)))
- '(sage-shell:sage-executable
-   "C:\\Users\\Eric\\AppData\\Local\\SageMath9_0\\runtime\\bin\\bash.exe")
- '(tramp-default-method "plink")
- '(verilog-auto-arg-format (quote single))
- '(window-divider-mode nil))
-
-
- 
-
-
-
-
-
-
-
-
-
-
-(require 'package)
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-  (when no-ssl (warn "\
-Your version of Emacs does not support SSL connections,
-which is unsafe because it allows man-in-the-middle attacks.
-There are two things you can do about this warning:
-1. Install an Emacs version that does support SSL and be safe.
-2. Remove this warning from your init file so you won't see it again."))
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
-  ;; and `package-pinned-packages`. Most users will not need or want to do this.
-  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-  )
-;;(package-initialize)
-
 
 
 
@@ -360,3 +288,12 @@ There are two things you can do about this warning:
 ;; spell checking for latex docs
 (add-hook 'tex-mode-hook
   #'(lambda () (setq ispell-parser 'tex)))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("ab2cbf30ab758c5e936b527377d543ce4927001742f79519b62c45ba9dd9f55e" default)))
+ '(inhibit-startup-screen t))
