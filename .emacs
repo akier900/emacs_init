@@ -1,5 +1,6 @@
 ;; Set cursor color to nice orange
-(set-cursor-color "#ff5733")
+(setq default-frame-alist
+       '((cursor-color . "ff5733")))
 
 
 ;; setup for straight.el. This allows moving between computers and
