@@ -1,15 +1,34 @@
-;; Set cursor color
-(set-cursor-color "DarkOrchid3")
+;;; Keybindings
 
 
+
+;; Set keybinding for toggling truncation. Something I need
+;; far too often...
+(global-set-key (kbd "C-c 4") 'toggle-truncate-lines)
+
+;; keybinding for eval-buffer to <F6>
+(global-set-key (kbd "<f6>") 'eval-buffer)
+
+
+;; reclaim M-u from function-args package.
+;; Set moo-complete to "C-c o" instead
+(define-key function-args-mode-map (kbd "C-c o") 'moo-complete)
+(define-key function-args-mode-map (kbd "M-u") 'upcase-word)
+
+;; reclaim M-o (quickly switch to other open window
+;; set fa-abort to <f9> instead
+(define-key function-args-mode-map (kbd "<f9>") 'fa-abort)
+(define-key function-args-mode-map (kbd "M-o") 'other-window)
+
+;; map alt-o to switch between open windows
+(global-set-key (kbd "M-o") 'other-window)
 
 ;; setup for straight.el. This allows moving between computers and
 ;; automatic installation of missing packages
+      
+ 
 
-
-
-
-;; This bootsrap snippet allows straignt.el to install itself with some magic.
+;; This bootstrap snippet allows straignt.el to install itself with some magic.
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -47,12 +66,9 @@
 (straight-use-package 'flyparens)
 (straight-use-package 'auctex)
 (straight-use-package 'auto-complete-auctex)
-(straight-use-package 'auto-complete-sage)
 (straight-use-package 'grammarly)
-(straight-use-package 'company-math)
 (straight-use-package 'flymake)
 (straight-use-package 'whole-line-or-region)
-(straight-use-package 'cheatsheet)
 (straight-use-package 'git)
 (straight-use-package 'helm-org)
 (straight-use-package 'helm-c-moccur)
@@ -60,7 +76,23 @@
 (straight-use-package 'helm-bibtex)
 (straight-use-package 'helm-bibtexkey)
 (straight-use-package 'spacemacs-theme)
+(straight-use-package 'function-args)
+(straight-use-package 'ggtags)
+(straight-use-package 'sr-speedbar)
+(straight-use-package 'company)
+(straight-use-package 'company-math)
+(straight-use-package 'company-c-headers)
+(straight-use-package 'cc-mode)
+(straight-use-package 'helm-gtags)
 
+
+
+
+
+;; require files for auto-completion "as you type" 
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+(add-to-list 'company-backends 'company-c-headers)
 
 ;; This is only needed once near the top of file. This sets up use of package 'use-package'
 (eval-when-compile
@@ -102,8 +134,6 @@
 (setq org-todo-keywords
   '((sequence "TODO" "IN-PROGRESS" "WAITING" "DONE")))
 
-;; map alt-o to switch between open windows
-(global-set-key (kbd "M-o") 'other-window)
 
 ;; allow switching of windows with combo of shift and arrow key
 (windmove-default-keybindings)
@@ -278,7 +308,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Hack" :foundry "SRC" :slant normal :weight normal :height 113 :width normal)))))
+ '(default ((t (:family "Hack" :foundry "SRC" :slant normal :weight normal :height 113 :width normal))))
+ '(cursor ((t (:background "orange1")))))
 
 ;; Trigger an insertion of relevant text depending on mode of
 ;; new file in current buffer. system default
@@ -308,13 +339,100 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(asm-comment-char 64)
  '(custom-enabled-themes (quote (spacemacs-dark)))
  '(custom-safe-themes
    (quote
-    ("ab2cbf30ab758c5e936b527377d543ce4927001742f79519b62c45ba9dd9f55e" default)))
- '(inhibit-startup-screen t))
+    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "ab2cbf30ab758c5e936b527377d543ce4927001742f79519b62c45ba9dd9f55e" default)))
+ '(display-line-numbers t)
+ '(gas-comment-char 59)
+ '(helm-gtags-prefix-key "\\C-t")
+ '(helm-gtags-suggested-key-mapping t)
+ '(inhibit-startup-screen t)
+ '(nyan-mode t)
+ '(show-paren-mode t))
 
 ;; when 'M-x check-parens' is run, it will highlight ungrouped expression from
-;; where your cursor cucrrently is
+;; where your cursor currently
 (show-paren-mode t)
 (setq show-paren-style 'expression)
+
+
+
+;; Add hook for assembly files with .s extenstion to trigger GAS mode.
+;; (require 'gas-mode)					   ;;
+;;  (add-to-list 'auto-mode-alist '("\\.s\\'" . gas-mode)) ;;
+
+;; Tell emacs where personal elisp lib dir is
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+
+(load "nyan-mode")
+
+
+
+;; for this to load properly, must clone repo into .emacs.d
+;(add-to-list 'load-path "~/.emacs.d/function-args")
+(require 'function-args)
+
+;; automaticaly active function-args-mode for each file
+;; This gives additional functionality for editing C/C++ files. 
+(fa-config-default)
+
+
+;; ggtags keybindings
+(require 'ggtags)
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+              (ggtags-mode 1))))
+
+(define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
+(define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
+(define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
+(define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
+(define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
+(define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
+
+(define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
+
+
+;; Integrate imenu with ggtags. provides interface.
+(setq-local imenu-create-index-function #'ggtags-build-imenu-index)
+
+
+
+
+
+
+;; Allow speedbar static file view to show all files, not just those
+;; in the current directory
+(setq speedbar-show-unknown-files t)
+
+
+;; Setup semantic code completion
+(require 'cc-mode)
+(require 'semantic)
+
+;; enable minor modes upon startup
+(global-semanticdb-minor-mode 1)
+(global-semantic-idle-scheduler-mode 1)
+
+(semantic-mode 1)
+
+
+;; auto enable gdb to operate in seperate buffers
+(setq
+ gdb-many-windows t
+ ;; non-nil means display source file containing the main routine at startup
+ gdb-show-main t)
+
+
+
+;; set asm-mode indenting back to "normal" behavior
+(defun my-asm-mode-hook ()
+  ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
+  (local-unset-key (vector asm-comment-char))
+  ;; asm-mode sets it locally to nil, to "stay closer to the old TAB behaviour".
+  (setq tab-always-indent (default-value 'tab-always-indent)))
+
+(add-hook 'asm-mode-hook #'my-asm-mode-hook)
