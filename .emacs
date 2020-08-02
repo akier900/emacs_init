@@ -10,16 +10,6 @@
 (global-set-key (kbd "<f6>") 'eval-buffer)
 
 
-;; reclaim M-u from function-args package.
-;; Set moo-complete to "C-c o" instead
-(define-key function-args-mode-map (kbd "C-c o") 'moo-complete)
-(define-key function-args-mode-map (kbd "M-u") 'upcase-word)
-
-;; reclaim M-o (quickly switch to other open window
-;; set fa-abort to <f9> instead
-(define-key function-args-mode-map (kbd "<f9>") 'fa-abort)
-(define-key function-args-mode-map (kbd "M-o") 'other-window)
-
 ;; map alt-o to switch between open windows
 (global-set-key (kbd "M-o") 'other-window)
 
@@ -49,24 +39,17 @@
 (straight-use-package 'org-ac)
 (straight-use-package 'org-bullets)
 (straight-use-package 'helm)
-(straight-use-package 'helm-sage)
-(straight-use-package 'helm-pass)
 (straight-use-package 'slack)
 (straight-use-package 'magit)
-(straight-use-package 'sage-shell-mode)
-(straight-use-package 'ob-sagemath)
 (straight-use-package 'recentf)
 (straight-use-package 'recentf-ext)
 (straight-use-package 'adoc-mode)
 (straight-use-package 'verilog-mode)
-(straight-use-package 'auth-source-pass)
-(straight-use-package 'pass)
 (straight-use-package 'yasnippet-snippets)
 (straight-use-package 'ac-octave)
 (straight-use-package 'flyparens)
 (straight-use-package 'auctex)
 (straight-use-package 'auto-complete-auctex)
-(straight-use-package 'grammarly)
 (straight-use-package 'flymake)
 (straight-use-package 'whole-line-or-region)
 (straight-use-package 'git)
@@ -144,23 +127,6 @@
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 
-;; ;; Hunspell setup
-;; (add-to-list 'exec-path "C:\msys64\mingw64\bin")
-;; (setenv "LANG" "en_US, ru_RU")
-;;   (setq-default  ispell-program-name "c:/msys64/mingw64/bin/hunspell.exe")
-;;   (with-eval-after-load "ispell"
-;;     (setq ispell-really-hunspell t)
-;;     (setq ispell-program-name "hunspell")
-;;     (setq ispell-dictionary "en_US")
-;;     ;; ispell-set-spellchecker-params has to be called
-;;     ;; before ispell-hunspell-add-multi-dic will work
-;;     (ispell-set-spellchecker-params)
-;;     (ispell-hunspell-add-multi-dic "en_US"))
-
-;;        (require 'ispell)
-;; ;; Hunspell setup end
-
-
 ;; make helm configuration file neccesary
 (require 'helm-config)
 
@@ -192,10 +158,6 @@
 	    (if (eq window-system 'x)
 		(font-lock-mode 1))))
 
-(setq auth-source-debug t)
-
-
-;(setq auth-sources '((:source "~/.authinfo.gpg")))
 
 
 
@@ -206,7 +168,6 @@
 ;	 :user "akier@pdx.edu")
 ; :subscribed-channels '((channel1 channel2)))
 ;     
-(use-package helm-pass)
 
 
 
@@ -218,27 +179,6 @@
 
 
 
-;; defining helm sage keyboard shortcuts
-(eval-after-load "sage-shell-mode"
-  '(sage-shell:define-keys sage-shell-mode-map
-     "C-c C-i"  'helm-sage-complete
-     "C-c C-h"  'helm-sage-describe-object-at-point
-     "M-r"      'helm-sage-command-history
-     "C-c o"    'helm-sage-output-history))
-
-
-
-
-
-
-;; run SageMath by M-x run-sage instead of M-x sage-shell:run-sage
-(sage-shell:define-alias)
-
-;; Turn on eldoc-mode in Sage terminal and in Sage source files
-(add-hook 'sage-shell-mode-hook #'eldoc-mode)
-(add-hook 'sage-shell:sage-mode-hook #'eldoc-mode)
-
-
 ;; If you want to enable inline display of LaTeX outputs only,
 ;; uncomment the following line.
 ;;(setq sage-shell-view-default-commands 'output)
@@ -246,16 +186,6 @@
 ;; If you want to enable inline display of plots only,
 ;; uncomment the following line.
 ;; (setq sage-shell-view-default-commands 'plot)
-
-(add-hook 'sage-shell-after-prompt-hook #'sage-shell-view-mode)
-
-
-;; sample ob-sagemath config
-
-;; Ob-sagemath supports only evaluating with a session.
-(setq org-babel-default-header-args:sage '((:session . t)
-                                           (:results . "output")))
-
 
 
 ;; C-c c for asynchronous evaluating (only for SageMath code blocks).
