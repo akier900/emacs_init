@@ -39,7 +39,6 @@
 (straight-use-package 'org-ac)
 (straight-use-package 'org-bullets)
 (straight-use-package 'helm)
-(straight-use-package 'slack)
 (straight-use-package 'magit)
 (straight-use-package 'recentf)
 (straight-use-package 'recentf-ext)
@@ -58,7 +57,6 @@
 (straight-use-package 'helm-c-yasnippet)
 (straight-use-package 'helm-bibtex)
 (straight-use-package 'helm-bibtexkey)
-(straight-use-package 'spacemacs-theme)
 (straight-use-package 'function-args)
 (straight-use-package 'ggtags)
 (straight-use-package 'sr-speedbar)
@@ -67,7 +65,8 @@
 (straight-use-package 'company-c-headers)
 (straight-use-package 'cc-mode)
 (straight-use-package 'helm-gtags)
-
+(straight-use-package 'header2)
+(straight-use-package 'pdf-tools)
 
 
 
@@ -82,12 +81,6 @@
   (require 'use-package))
 
 
-;; helps combat screen tearing in exchange for reduced performance
-;; speed
-(setq redisplay-dont-pause t)
-
-
-
 ;; Bind M-/ to M-x hippie-expand instead of dabbrev
 (global-set-key "\M- " 'hippie-expand)
 
@@ -97,29 +90,12 @@
 (setq tooltip-use-echo-area t) 
 
 
-;; Maximize window upon opening of emacs
-
-(defun maximize-frame ()
-  "Maximizes the active frame in Windows"
-  (interactive)
-  ;; Send a `WM_SYSCOMMAND' message to the active frame with the
-  ;; `SC_MAXIMIZE' parameter.
-  (when (eq system-type 'windows-nt)
-    (w32-send-sys-command 61488)))
-(add-hook 'window-setup-hook 'maximize-frame t)
-
-
-
 ;; associate .txt files with asciidoc mode
 (add-to-list 'auto-mode-alist (cons "\\.txt\\'" 'adoc-mode))
 
 
 (setq org-todo-keywords
   '((sequence "TODO" "IN-PROGRESS" "WAITING" "DONE")))
-
-
-;; allow switching of windows with combo of shift and arrow key
-(windmove-default-keybindings)
 
 
 ;; make pretty utf-8 style bullets in org mode
@@ -161,16 +137,6 @@
 
 
 
-;(slack-register-team
-; :name "nexgarden"
-; :token (auth-source-pick-first-password
-;	 :host "nexgarden.slack.com"
-;	 :user "akier@pdx.edu")
-; :subscribed-channels '((channel1 channel2)))
-;     
-
-
-
 ;; global shortcut key for magit-status command
 (global-set-key (kbd "C-x g") 'magit-status)
 
@@ -178,19 +144,6 @@
 (setq magit-view-git-manual-method 'man)
 
 
-
-;; If you want to enable inline display of LaTeX outputs only,
-;; uncomment the following line.
-;;(setq sage-shell-view-default-commands 'output)
-
-;; If you want to enable inline display of plots only,
-;; uncomment the following line.
-;; (setq sage-shell-view-default-commands 'plot)
-
-
-;; C-c c for asynchronous evaluating (only for SageMath code blocks).
-(with-eval-after-load "org"
-  (define-key org-mode-map (kbd "C-c c") 'ob-sagemath-execute-async))
 
 ;; Do not confirm before evaluation
 (setq org-confirm-babel-evaluate nil)
@@ -229,10 +182,6 @@
 (setq ido-create-new-buffer 'always)
 
 
-;; Wait till package is loaded (after init is read) then
-;; load theme
-(add-hook 'after-init-hook (lambda () (load-theme 'spacemacs-dark)))
-
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -270,21 +219,16 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(asm-comment-char 64)
- '(custom-enabled-themes (quote (spacemacs-dark)))
- '(custom-safe-themes
-   (quote
-    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "ab2cbf30ab758c5e936b527377d543ce4927001742f79519b62c45ba9dd9f55e" default)))
  '(display-line-numbers t)
  '(gas-comment-char 59)
  '(helm-gtags-prefix-key "\\C-t")
  '(helm-gtags-suggested-key-mapping t)
  '(inhibit-startup-screen t)
  '(nyan-mode t)
- '(show-paren-mode t))
+ '(show-paren-mode t)
+ '(user-full-name "Eric Aki, Email: Akier@pdx.edu"))
 
 ;; when 'M-x check-parens' is run, it will highlight ungrouped expression from
-;; where your cursor currently
-(show-paren-mode t)
 (setq show-paren-style 'expression)
 
 
@@ -297,8 +241,6 @@
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
 (load "nyan-mode")
-
-
 
 ;; for this to load properly, must clone repo into .emacs.d
 ;(add-to-list 'load-path "~/.emacs.d/function-args")
@@ -328,10 +270,6 @@
 
 ;; Integrate imenu with ggtags. provides interface.
 (setq-local imenu-create-index-function #'ggtags-build-imenu-index)
-
-
-
-
 
 
 ;; Allow speedbar static file view to show all files, not just those
@@ -366,3 +304,14 @@
   (setq tab-always-indent (default-value 'tab-always-indent)))
 
 (add-hook 'asm-mode-hook #'my-asm-mode-hook)
+
+(autoload 'auto-update-file-header "header2")
+(add-hook 'write-file-hooks 'auto-update-file-header)
+
+(autoload 'auto-make-header "header2")
+(add-hook 'emacs-lisp-mode-hook 'auto-make-header)
+(add-hook 'c-mode-common-hook 'auto-make-header)
+
+
+;; Define keyboard shortcut for M-x recompile
+(global-set-key (kbd "C-c C-r") 'recompile)
