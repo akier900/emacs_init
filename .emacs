@@ -159,7 +159,7 @@
 ;; Show images after evaluating code blocks.
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
-;; recentf package setup
+ ;; recentf package setup
 (require 'recentf)
 
 ;; get rid of 'find-file-read-only' and replace with something more
@@ -193,9 +193,6 @@
  '(cursor ((t (:background "orange1")))))
 
 ;; Trigger an insertion of relevant text depending on mode of
-;; new file in current buffer. system default
-(add-hook 'find-file-hook 'auto-insert)
-
 
 ;; Enable YAsnippets. Add user snippets to ~/.emacs.d/snippets
 ;; or invoke M-x-yas-new-snippet
@@ -209,12 +206,9 @@
   #'(lambda () (setq ispell-parser 'tex)))
 
 
-
-
-
-
  '(straight-use-package-by-default t)
- ;; tells use-package to defer to straight.el as it's default package manager for installs.
+;; tells use-package to defer to straight.el as it's default package manager for installs.
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -332,4 +326,10 @@
   (add-to-list 'ac-modes 'inferior-emacs-lisp-mode)
   (auto-complete-mode 1))
 (add-hook 'ielm-mode-hook 'ielm-auto-complete)
+
+
+
+
+
+
 
