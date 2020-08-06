@@ -1,6 +1,8 @@
 ;;; Keybindings
 
-
+;; Allows automatic new lines when navigating past
+;; 'end' of current buffer with basic movement commands.
+(setq next-line-add-newlines t)
 
 ;; Set keybinding for toggling truncation. Something I need
 ;; far too often...
@@ -187,7 +189,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Hack" :foundry "SRC" :slant normal :weight normal :height 113 :width normal))))
+ '(default ((t (:family "Fira Code" :foundry "CTDB" :slant normal :weight semi-bold :height 98 :width normal))))
  '(cursor ((t (:background "orange1")))))
 
 ;; Trigger an insertion of relevant text depending on mode of
@@ -330,3 +332,4 @@
   (add-to-list 'ac-modes 'inferior-emacs-lisp-mode)
   (auto-complete-mode 1))
 (add-hook 'ielm-mode-hook 'ielm-auto-complete)
+
