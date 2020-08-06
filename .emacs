@@ -219,6 +219,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(asm-comment-char 64)
+ '(custom-enabled-themes (quote (leuven)))
  '(display-line-numbers t)
  '(gas-comment-char 59)
  '(helm-gtags-prefix-key "\\C-t")
@@ -315,3 +316,17 @@
 
 ;; Define keyboard shortcut for M-x recompile
 (global-set-key (kbd "C-c C-r") 'recompile)
+
+
+;; Enable auto-completion in IELM: Emacs REPL
+;; Enter IELM with M-x ielm
+(defun ielm-auto-complete ()
+  "Enables 'auto-complete' support in \\[ielm]."
+  (setq ac-sources '(ac-source-functions
+		     ac-source-variables
+		     ac-source-features
+		     ac-source-symbols
+		     ac-source-words-in-same-mode-buffers))
+  (add-to-list 'ac-modes 'inferior-emacs-lisp-mode)
+  (auto-complete-mode 1))
+(add-hook 'ielm-mode-hook 'ielm-auto-complete)
