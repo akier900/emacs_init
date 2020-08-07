@@ -38,7 +38,6 @@
 (straight-use-package 'use-package)
 (straight-use-package 'el-patch)
 (straight-use-package 'org)
-(straight-use-package 'org-ac)
 (straight-use-package 'org-bullets)
 (straight-use-package 'helm)
 (straight-use-package 'magit)
@@ -47,7 +46,6 @@
 (straight-use-package 'adoc-mode)
 (straight-use-package 'verilog-mode)
 (straight-use-package 'yasnippet-snippets)
-(straight-use-package 'ac-octave)
 (straight-use-package 'flyparens)
 (straight-use-package 'auctex)
 (straight-use-package 'auto-complete-auctex)
@@ -59,19 +57,19 @@
 (straight-use-package 'helm-c-yasnippet)
 (straight-use-package 'helm-bibtex)
 (straight-use-package 'helm-bibtexkey)
+(straight-use-package 'helm-gtags)
 (straight-use-package 'function-args)
-(straight-use-package 'ggtags)
 (straight-use-package 'sr-speedbar)
 (straight-use-package 'company)
 (straight-use-package 'company-math)
 (straight-use-package 'company-c-headers)
+(straight-use-package 'company-jedi)
 (straight-use-package 'cc-mode)
-(straight-use-package 'helm-gtags)
 (straight-use-package 'header2)
 (straight-use-package 'pdf-tools)
 
-
-
+;; Enable dired-x for additional dired commands
+(require 'dired-x)
 
 ;; require files for auto-completion "as you type" 
 (require 'company)
@@ -81,6 +79,7 @@
 ;; This is only needed once near the top of file. This sets up use of package 'use-package'
 (eval-when-compile
   (require 'use-package))
+
 
 
 ;; Bind M-/ to M-x hippie-expand instead of dabbrev
@@ -248,26 +247,6 @@
 (fa-config-default)
 
 
-;; ggtags keybindings
-(require 'ggtags)
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
-              (ggtags-mode 1))))
-
-(define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
-(define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
-(define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
-(define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
-(define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
-(define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
-
-(define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
-
-
-;; Integrate imenu with ggtags. provides interface.
-(setq-local imenu-create-index-function #'ggtags-build-imenu-index)
-
 
 ;; Allow speedbar static file view to show all files, not just those
 ;; in the current directory
@@ -290,7 +269,6 @@
  gdb-many-windows t
  ;; non-nil means display source file containing the main routine at startup
  gdb-show-main t)
-
 
 
 ;; set asm-mode indenting back to "normal" behavior
@@ -327,9 +305,40 @@
   (auto-complete-mode 1))
 (add-hook 'ielm-mode-hook 'ielm-auto-complete)
 
+;; Improve system default commmands with their helm counterparts
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+
+
+;; helm-gtags setup
+(setq
+ helm-gtags-ignore-case t
+ helm-gtags-auto-update t
+ helm-gtags-use-input-at-cursor t
+ helm-gtags-pulse-at-cursor t
+ helm-gtags-prefix-key "\C-cg"
+ helm-gtags-suggested-key-mapping t
+ )
+
+(require 'helm-gtags)
+;; Enable helm-gtags-mode
+(add-hook 'dired-mode-hook 'helm-gtags-mode)
+(add-hook 'eshell-mode-hook 'helm-gtags-mode)
+(add-hook 'c-mode-hook 'helm-gtags-mode)
+(add-hook 'c++-mode-hook 'helm-gtags-mode)
+(add-hook 'asm-mode-hook 'helm-gtags-mode)
+
+(define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+(define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
+(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+(define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
 
 
 
-
-
+(add-hook 'c-mode-common-hook
+	  (lambda ()
+	    (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+	      (ggtags-mode 1))))
 
