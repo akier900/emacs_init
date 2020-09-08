@@ -52,7 +52,6 @@
 (straight-use-package 'company-math)
 (straight-use-package 'flymake)
 (straight-use-package 'whole-line-or-region)
-(straight-use-package 'cheatsheet)
 (straight-use-package 'git)
 (straight-use-package 'helm-org)
 (straight-use-package 'helm-c-moccur)
@@ -60,11 +59,15 @@
 (straight-use-package 'helm-bibtex)
 (straight-use-package 'helm-bibtexkey)
 (straight-use-package 'spacemacs-theme)
-
+(straight-use-package 'dash)
+(straight-use-package 'dired-hacks)
 
 ;; This is only needed once near the top of file. This sets up use of package 'use-package'
 (eval-when-compile
   (require 'use-package))
+
+
+
 
 
 ;; helps combat screen tearing in exchange for reduced performance
