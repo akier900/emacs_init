@@ -1,4 +1,11 @@
 ;; Set cursor color
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (set-cursor-color "DarkOrchid3")
 
 
@@ -27,7 +34,6 @@
 (straight-use-package 'use-package)
 (straight-use-package 'el-patch)
 (straight-use-package 'org)
-(straight-use-package 'org-ac)
 (straight-use-package 'org-bullets)
 (straight-use-package 'helm)
 (straight-use-package 'helm-sage)
@@ -39,15 +45,10 @@
 (straight-use-package 'recentf)
 (straight-use-package 'recentf-ext)
 (straight-use-package 'adoc-mode)
-(straight-use-package 'verilog-mode)
-(straight-use-package 'auth-source-pass)
 (straight-use-package 'pass)
 (straight-use-package 'yasnippet-snippets)
-(straight-use-package 'ac-octave)
 (straight-use-package 'flyparens)
 (straight-use-package 'auctex)
-(straight-use-package 'auto-complete-auctex)
-(straight-use-package 'auto-complete-sage)
 (straight-use-package 'grammarly)
 (straight-use-package 'company-math)
 (straight-use-package 'flymake)
@@ -58,17 +59,25 @@
 (straight-use-package 'helm-c-yasnippet)
 (straight-use-package 'helm-bibtex)
 (straight-use-package 'helm-bibtexkey)
-(straight-use-package 'spacemacs-theme)
+(straight-use-package 'helm-company)
 (straight-use-package 'dash)
 (straight-use-package 'dired-hacks)
+(straight-use-package 'highlight-indent-guides)
+(straight-use-package 'verilog-mode)
+(straight-use-package 'company)
 
 ;; This is only needed once near the top of file. This sets up use of package 'use-package'
 (eval-when-compile
   (require 'use-package))
 
 
-
-
+;; Set helm front-end for company, activate company everywhere and
+;; bind helm-company to "C-:"
+(add-hook 'after-init-hook 'global-company-mode)
+(eval-after-load 'company
+  '(progn
+     (define-key company-mode-map (kbd "C-:") 'helm-company)
+     (define-key company-active-map (kbd "C-:") 'helm-company)))
 
 ;; helps combat screen tearing in exchange for reduced performance
 ;; speed
@@ -83,6 +92,13 @@
 ;; display tooltips in echo area instead of seperate frame
 (tooltip-mode -1)
 (setq tooltip-use-echo-area t) 
+
+
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+
 
 
 ;; Maximize window upon opening of emacs
@@ -181,6 +197,7 @@
 ;     
 (use-package helm-pass)
 
+(global-display-line-numbers-mode)
 
 
 ;; global shortcut key for magit-status command
@@ -189,51 +206,6 @@
 ;; allow info to visit links to 'gitman' info manual
 (setq magit-view-git-manual-method 'man)
 
-
-
-;; defining helm sage keyboard shortcuts
-(eval-after-load "sage-shell-mode"
-  '(sage-shell:define-keys sage-shell-mode-map
-     "C-c C-i"  'helm-sage-complete
-     "C-c C-h"  'helm-sage-describe-object-at-point
-     "M-r"      'helm-sage-command-history
-     "C-c o"    'helm-sage-output-history))
-
-
-
-
-
-
-;; run SageMath by M-x run-sage instead of M-x sage-shell:run-sage
-(sage-shell:define-alias)
-
-;; Turn on eldoc-mode in Sage terminal and in Sage source files
-(add-hook 'sage-shell-mode-hook #'eldoc-mode)
-(add-hook 'sage-shell:sage-mode-hook #'eldoc-mode)
-
-
-;; If you want to enable inline display of LaTeX outputs only,
-;; uncomment the following line.
-;;(setq sage-shell-view-default-commands 'output)
-
-;; If you want to enable inline display of plots only,
-;; uncomment the following line.
-;; (setq sage-shell-view-default-commands 'plot)
-
-(add-hook 'sage-shell-after-prompt-hook #'sage-shell-view-mode)
-
-
-;; sample ob-sagemath config
-
-;; Ob-sagemath supports only evaluating with a session.
-(setq org-babel-default-header-args:sage '((:session . t)
-                                           (:results . "output")))
-
-
-
-;; C-c c for asynchronous evaluating (only for SageMath code blocks).
-(with-eval-after-load "org"
-  (define-key org-mode-map (kbd "C-c c") 'ob-sagemath-execute-async))
 
 ;; Do not confirm before evaluation
 (setq org-confirm-babel-evaluate nil)
@@ -272,20 +244,47 @@
 (setq ido-create-new-buffer 'always)
 
 
-;; Wait till package is loaded (after init is read) then
-;; load theme
-(add-hook 'after-init-hook (lambda () (load-theme 'spacemacs-dark)))
+ 
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Hack" :foundry "SRC" :slant normal :weight normal :height 113 :width normal)))))
+ '(default ((t (:family "Fira Code Medium" :foundry "outline" :slant normal :weight normal :height 120 :width normal)))))
 
 ;; Trigger an insertion of relevant text depending on mode of
 ;; new file in current buffer. system default
 (add-hook 'find-file-hook 'auto-insert)
+
+;; START TABS CONFIG
+(setq custom-tab-width 4)
+
+;; Two functions for enabling/disabling in Emacs
+(defun disable-tabs () (setq indent-tabs-mode nil))
+
+(defun enable-tabs ()
+  (local-set-key (kbd "TAB") 'tab-to-tab-stop)
+  (setq indent-tabs-mode t)
+  (setq tab-width custom-tab-width))
+
+;; Hooks to enable tabs and indent guides
+(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+(add-hook 'prog-mode-hook 'enable-tabs)
+
+;; Hooks to disable
+(add-hook 'lisp-mode-hook 'disable-tabs)
+(add-hook 'emacs-lisp-mode-hook 'disable-tabs)
+
+;; Making electric-indent behave sanely
+(setq-default electric-indent-inhibit t)
+
+;; Make backspace properly erase tab instead of 1 space at a time
+(setq backward-delete-char-untabify-method 'hungry)
+
+
+;; END TABS CONFIG
+
 
 
 ;; Enable YAsnippets. Add user snippets to ~/.emacs.d/snippets
@@ -311,11 +310,41 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (spacemacs-dark)))
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["black" "red3" "ForestGreen" "yellow3" "blue" "magenta3" "DeepSkyBlue" "gray50"])
+ '(company-backends
+   (quote
+    (company-keywords company-bbdb company-semantic company-capf company-clang company-files
+                      (company-dabbrev-code company-gtags company-etags company-cmake)
+                      company-oddmuse company-dabbrev)))
+ '(custom-enabled-themes (quote (misterioso)))
  '(custom-safe-themes
    (quote
     ("ab2cbf30ab758c5e936b527377d543ce4927001742f79519b62c45ba9dd9f55e" default)))
- '(inhibit-startup-screen t))
+ '(global-display-line-numbers-mode t)
+ '(highlight-indent-guides-method (quote bitmap))
+ '(hl-todo-keyword-faces
+   (quote
+    (("TODO" . "#dc752f")
+     ("NEXT" . "#dc752f")
+     ("THEM" . "#2d9574")
+     ("PROG" . "#4f97d7")
+     ("OKAY" . "#4f97d7")
+     ("DONT" . "#f2241f")
+     ("FAIL" . "#f2241f")
+     ("DONE" . "#86dc2f")
+     ("NOTE" . "#b1951d")
+     ("KLUDGE" . "#b1951d")
+     ("HACK" . "#b1951d")
+     ("TEMP" . "#b1951d")
+     ("FIXME" . "#dc752f")
+     ("XXX+" . "#dc752f")
+     ("\\?\\?\\?+" . "#dc752f"))))
+ '(inhibit-startup-screen t)
+ '(pdf-view-midnight-colors (quote ("#b2b2b2" . "#292b2e")))
+ '(show-paren-mode t))
 
 ;; when 'M-x check-parens' is run, it will highlight ungrouped expression from
 ;; where your cursor cucrrently is
