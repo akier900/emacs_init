@@ -74,6 +74,7 @@
 (straight-use-package 'sage-shell-mode)
 (straight-use-package 'sublime-themes)
 (straight-use-package 'nyan-mode)
+(straight-use-package 'dumb-jump)
 
 ;; Enable dired-x for additional dired commands
 (require 'dired-x)
@@ -362,13 +363,5 @@
 (add-hook 'sage-shell-after-prompt-hook #'sage-shell-view-mode)
 
 
-
-
-
-
-
-
-
-
-
-
+;; Activation for dumb-jump package
+(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
