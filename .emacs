@@ -73,6 +73,7 @@
 (straight-use-package 'helm-sage)
 (straight-use-package 'sage-shell-mode)
 (straight-use-package 'sublime-themes)
+(straight-use-package 'nyan-mode)
 
 ;; Enable dired-x for additional dired commands
 (require 'dired-x)
