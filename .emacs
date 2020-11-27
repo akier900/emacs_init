@@ -1,8 +1,6 @@
 ;;; Keybindings
 
-;; Allows automatic new lines when navigating past
-;; 'end' of current buffer with basic movement commands.
-(setq next-line-add-newlines t)
+
 
 ;; Set keybinding for toggling truncation. Something I need
 ;; far too often...
@@ -38,14 +36,16 @@
 (straight-use-package 'use-package)
 (straight-use-package 'el-patch)
 (straight-use-package 'org)
+(straight-use-package 'org-ac)
 (straight-use-package 'org-bullets)
 (straight-use-package 'helm)
+(straight-use-package 'slack)
 (straight-use-package 'magit)
 (straight-use-package 'recentf)
 (straight-use-package 'recentf-ext)
-(straight-use-package 'adoc-mode)
 (straight-use-package 'verilog-mode)
 (straight-use-package 'yasnippet-snippets)
+(straight-use-package 'ac-octave)
 (straight-use-package 'flyparens)
 (straight-use-package 'auctex)
 (straight-use-package 'auto-complete-auctex)
@@ -57,19 +57,21 @@
 (straight-use-package 'helm-c-yasnippet)
 (straight-use-package 'helm-bibtex)
 (straight-use-package 'helm-bibtexkey)
-(straight-use-package 'helm-gtags)
-(straight-use-package 'function-args)
+(straight-use-package 'ggtags)
 (straight-use-package 'sr-speedbar)
 (straight-use-package 'company)
 (straight-use-package 'company-math)
 (straight-use-package 'company-c-headers)
-(straight-use-package 'company-jedi)
 (straight-use-package 'cc-mode)
+(straight-use-package 'helm-gtags)
 (straight-use-package 'header2)
-(straight-use-package 'pdf-tools)
-
-;; Enable dired-x for additional dired commands
-(require 'dired-x)
+(straight-use-package 'sage-shell-mode)
+(straight-use-package 'helm-sage)
+(straight-use-package 'auto-complete-sage)
+(straight-use-package 'tiny)
+(straight-use-package 'python)
+(straight-use-package 'csv-mode)
+(straight-use-package 'counsel)
 
 ;; require files for auto-completion "as you type" 
 (require 'company)
@@ -79,6 +81,11 @@
 ;; This is only needed once near the top of file. This sets up use of package 'use-package'
 (eval-when-compile
   (require 'use-package))
+
+
+;; helps combat screen tearing in exchange for reduced performance
+;; speed
+(setq redisplay-dont-pause t)
 
 
 
@@ -91,12 +98,29 @@
 (setq tooltip-use-echo-area t) 
 
 
+;; Maximize window upon opening of emacs
+
+(defun maximize-frame ()
+  "Maximizes the active frame in Windows"
+  (interactive)
+  ;; Send a `WM_SYSCOMMAND' message to the active frame with the
+  ;; `SC_MAXIMIZE' parameter.
+  (when (eq system-type 'windows-nt)
+    (w32-send-sys-command 61488)))
+(add-hook 'window-setup-hook 'maximize-frame t)
+
+
+
 ;; associate .txt files with asciidoc mode
 (add-to-list 'auto-mode-alist (cons "\\.txt\\'" 'adoc-mode))
 
 
 (setq org-todo-keywords
   '((sequence "TODO" "IN-PROGRESS" "WAITING" "DONE")))
+
+
+;; allow switching of windows with combo of shift and arrow key
+(windmove-default-keybindings)
 
 
 ;; make pretty utf-8 style bullets in org mode
@@ -138,6 +162,16 @@
 
 
 
+;(slack-register-team
+; :name "nexgarden"
+; :token (auth-source-pick-first-password
+;	 :host "nexgarden.slack.com"
+;	 :user "akier@pdx.edu")
+; :subscribed-channels '((channel1 channel2)))
+;     
+
+
+
 ;; global shortcut key for magit-status command
 (global-set-key (kbd "C-x g") 'magit-status)
 
@@ -145,6 +179,19 @@
 (setq magit-view-git-manual-method 'man)
 
 
+
+;; If you want to enable inline display of LaTeX outputs only,
+;; uncomment the following line.
+;;(setq sage-shell-view-default-commands 'output)
+
+;; If you want to enable inline display of plots only,
+;; uncomment the following line.
+;; (setq sage-shell-view-default-commands 'plot)
+
+
+;; C-c c for asynchronous evaluating (only for SageMath code blocks).
+(with-eval-after-load "org"
+  (define-key org-mode-map (kbd "C-c c") 'ob-sagemath-execute-async))
 
 ;; Do not confirm before evaluation
 (setq org-confirm-babel-evaluate nil)
@@ -158,7 +205,7 @@
 ;; Show images after evaluating code blocks.
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
- ;; recentf package setup
+;; recentf package setup
 (require 'recentf)
 
 ;; get rid of 'find-file-read-only' and replace with something more
@@ -183,15 +230,22 @@
 (setq ido-create-new-buffer 'always)
 
 
+;; Wait till package is loaded (after init is read) then
+;; load theme
+(add-hook 'after-init-hook (lambda () (load-theme 'spacemacs-dark)))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Fira Code" :foundry "CTDB" :slant normal :weight semi-bold :height 98 :width normal))))
+ '(default ((t (:family "Fira Code" :foundry "outline" :slant normal :weight normal :height 109 :width normal))))
  '(cursor ((t (:background "orange1")))))
 
 ;; Trigger an insertion of relevant text depending on mode of
+;; new file in current buffer. system default
+(add-hook 'find-file-hook 'auto-insert)
+
 
 ;; Enable YAsnippets. Add user snippets to ~/.emacs.d/snippets
 ;; or invoke M-x-yas-new-snippet
@@ -205,26 +259,53 @@
   #'(lambda () (setq ispell-parser 'tex)))
 
 
- '(straight-use-package-by-default t)
-;; tells use-package to defer to straight.el as it's default package manager for installs.
 
+
+
+
+ '(straight-use-package-by-default t)
+ ;; tells use-package to defer to straight.el as it's default package manager for installs.
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+   ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
  '(asm-comment-char 64)
- '(custom-enabled-themes (quote (leuven)))
+ '(custom-enabled-themes (quote (wheatgrass)))
+ '(custom-safe-themes
+   (quote
+    ("66f32da4e185defe7127e0dc8b779af99c00b60c751b0662276acaea985e2721" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "ab2cbf30ab758c5e936b527377d543ce4927001742f79519b62c45ba9dd9f55e" default)))
  '(display-line-numbers t)
  '(gas-comment-char 59)
  '(helm-gtags-prefix-key "\\C-t")
  '(helm-gtags-suggested-key-mapping t)
+ '(hl-todo-keyword-faces
+   (quote
+    (("TODO" . "#dc752f")
+     ("NEXT" . "#dc752f")
+     ("THEM" . "#2d9574")
+     ("PROG" . "#3a81c3")
+     ("OKAY" . "#3a81c3")
+     ("DONT" . "#f2241f")
+     ("FAIL" . "#f2241f")
+     ("DONE" . "#42ae2c")
+     ("NOTE" . "#b1951d")
+     ("KLUDGE" . "#b1951d")
+     ("HACK" . "#b1951d")
+     ("TEMP" . "#b1951d")
+     ("FIXME" . "#dc752f")
+     ("XXX+" . "#dc752f")
+     ("\\?\\?\\?+" . "#dc752f"))))
  '(inhibit-startup-screen t)
  '(nyan-mode t)
- '(show-paren-mode t)
- '(user-full-name "Eric Aki, Email: Akier@pdx.edu"))
+ '(pdf-view-midnight-colors (quote ("#655370" . "#fbf8ef")))
+ '(show-paren-mode t))
 
 ;; when 'M-x check-parens' is run, it will highlight ungrouped expression from
+;; where your cursor currently
+(show-paren-mode t)
 (setq show-paren-style 'expression)
 
 
@@ -238,13 +319,39 @@
 
 (load "nyan-mode")
 
+
+
 ;; for this to load properly, must clone repo into .emacs.d
 ;(add-to-list 'load-path "~/.emacs.d/function-args")
-(require 'function-args)
+;;(require 'function-args)
 
 ;; automaticaly active function-args-mode for each file
 ;; This gives additional functionality for editing C/C++ files. 
-(fa-config-default)
+;;(fa-config-default)
+
+
+;; ggtags keybindings
+(require 'ggtags)
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+              (ggtags-mode 1))))
+
+(define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
+(define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
+(define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
+(define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
+(define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
+(define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
+
+(define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
+
+
+;; Integrate imenu with ggtags. provides interface.
+(setq-local imenu-create-index-function #'ggtags-build-imenu-index)
+
+
+
 
 
 
@@ -271,6 +378,7 @@
  gdb-show-main t)
 
 
+
 ;; set asm-mode indenting back to "normal" behavior
 (defun my-asm-mode-hook ()
   ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
@@ -280,60 +388,6 @@
 
 (add-hook 'asm-mode-hook #'my-asm-mode-hook)
 
-(autoload 'auto-update-file-header "header2")
-(add-hook 'write-file-hooks 'auto-update-file-header)
-
-(autoload 'auto-make-header "header2")
-(add-hook 'emacs-lisp-mode-hook 'auto-make-header)
-(add-hook 'c-mode-common-hook 'auto-make-header)
-
-
-;; Define keyboard shortcut for M-x recompile
-(global-set-key (kbd "C-c C-r") 'recompile)
-
-
-;; Enable auto-completion in IELM: Emacs REPL
-;; Enter IELM with M-x ielm
-(defun ielm-auto-complete ()
-  "Enables 'auto-complete' support in \\[ielm]."
-  (setq ac-sources '(ac-source-functions
-		     ac-source-variables
-		     ac-source-features
-		     ac-source-symbols
-		     ac-source-words-in-same-mode-buffers))
-  (add-to-list 'ac-modes 'inferior-emacs-lisp-mode)
-  (auto-complete-mode 1))
-(add-hook 'ielm-mode-hook 'ielm-auto-complete)
-
-;; Improve system default commmands with their helm counterparts
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "M-y") 'helm-show-kill-ring)
-
-
-;; helm-gtags setup
-(setq
- helm-gtags-ignore-case t
- helm-gtags-auto-update t
- helm-gtags-use-input-at-cursor t
- helm-gtags-pulse-at-cursor t
- helm-gtags-prefix-key "\C-cg"
- helm-gtags-suggested-key-mapping t
- )
-
-(require 'helm-gtags)
-;; Enable helm-gtags-mode
-(add-hook 'dired-mode-hook 'helm-gtags-mode)
-(add-hook 'eshell-mode-hook 'helm-gtags-mode)
-(add-hook 'c-mode-hook 'helm-gtags-mode)
-(add-hook 'c++-mode-hook 'helm-gtags-mode)
-(add-hook 'asm-mode-hook 'helm-gtags-mode)
-
-(define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
-(define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
-(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
-(define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
-(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
-(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
 
 
 
