@@ -18,12 +18,11 @@
 ;; setup for straight.el. This allows moving between computers and
 ;; automatic installation of missing packages
 
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+;(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
 ;; and `package-pinned-packages`. Most users will not need or want to do this.
 ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(package-initialize)      
+;(package-initialize)      
  
 
 ;; This bootstrap snippet allows straignt.el to install itself with some magic.
@@ -278,23 +277,6 @@
  gdb-show-main t)
 
 
-;; set asm-mode indenting back to "normal" behavior
-(defun my-asm-mode-hook ()
-  ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
-  (local-unset-key (vector asm-comment-char))
-  ;; asm-mode sets it locally to nil, to "stay closer to the old TAB behaviour".
-  (setq tab-always-indent (default-value 'tab-always-indent)))
-
-(add-hook 'asm-mode-hook #'my-asm-mode-hook)
-
-(autoload 'auto-update-file-header "header2")
-(add-hook 'write-file-hooks 'auto-update-file-header)
-
-(autoload 'auto-make-header "header2")
-(add-hook 'emacs-lisp-mode-hook 'auto-make-header)
-(add-hook 'c-mode-common-hook 'auto-make-header)
-
-
 ;; Define keyboard shortcut for M-x recompile
 (global-set-key (kbd "C-c C-r") 'recompile)
 
@@ -317,46 +299,6 @@
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 
 
-;; ;; helm-gtags setup
-;; (setq
-;;  helm-gtags-ignore-case t
-;;  helm-gtags-auto-update t
-;;  helm-gtags-use-input-at-cursor t
-;;  helm-gtags-pulse-at-cursor t
-;;  helm-gtags-prefix-key "\C-cg"
-;;  helm-gtags-suggested-key-mapping t
-;;  )
-
-;; (require 'helm-gtags)
-;; ;; Enable helm-gtags-mode
-;; (add-hook 'dired-mode-hook 'helm-gtags-mode)
-;; (add-hook 'eshell-mode-hook 'helm-gtags-mode)
-;; (add-hook 'c-mode-hook 'helm-gtags-mode)
-;; (add-hook 'c++-mode-hook 'helm-gtags-mode)
-;; (add-hook 'asm-mode-hook 'helm-gtags-mode)
-
-;; (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
-;; (define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
-;; (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
-;; (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
-;; (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
-;; (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
-
-
-
-
-
-
-
-;; If you want to enable inline display of LaTeX outputs only,
-;; uncomment the following line.
-;; (setq sage-shell-view-default-commands 'output)
-
-;; If you want to enable inline display of plots only,
-;; uncomment the following line.
-;; (setq sage-shell-view-default-commands 'plot)
-
-
 ;; Run SageMath by M-x run-sage instead of M-x sage-shell:run-sage
 (sage-shell:define-alias)
 
@@ -365,3 +307,18 @@
 
 ;; Activation for dumb-jump package
 (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+
+
+(defun load-history-filename-element (file-regexp)
+  "Get the first elt of `load-history' whose car matches FILE-REGEXP.
+Return nil if there isn't one."
+  (let* ((loads load-history)
+   (load-elt (and loads (car loads))))
+    (save-match-data
+      (while (and loads
+      (or (null (car load-elt))
+          (not (stringp (car load-elt)))
+          (not (string-match file-regexp (car load-elt)))))
+  (setq loads (cdr loads)
+        load-elt (and loads (car loads)))))
+    load-elt))
