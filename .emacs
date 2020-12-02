@@ -1,4 +1,4 @@
-;;; Keybindings
+;;; 
 
 ;; Allows automatic new lines when navigating past
 ;; 'end' of current buffer with basic movement commands.
@@ -299,11 +299,30 @@
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 
 
+;; Turn on eldoc-mode in Sage terminal and in Sage source files
+(add-hook 'sage-shell-mode-hook #'eldoc-mode)
+(add-hook 'sage-shell:sage-mode-hook #'eldoc-mode)
+
+
 ;; Run SageMath by M-x run-sage instead of M-x sage-shell:run-sage
 (sage-shell:define-alias)
 
 (add-hook 'sage-shell-after-prompt-hook #'sage-shell-view-mode)
 
+;; set helm commands
+(eval-after-load "sage-shell-mode"
+  '(sage-shell:define-keys sage-shell-mode-map
+     "C-c C-i"  'helm-sage-complete
+     "C-c C-h"  'helm-sage-describe-object-at-point
+     "M-r"      'helm-sage-command-history
+     "C-c o"    'helm-sage-output-history))
+
+;; add ac sources for sage-shell-mode
+(add-hook 'sage-shell:sage-mode-hook 'ac-sage-setup)
+(add-hook 'sage-shell-mode-hook 'ac-sage-setup)
+;; allow tab completion at point
+(eval-after-load "auto-complete-sage"
+  '(setq sage-shell:completion-function 'completion-at-point))
 
 ;; Activation for dumb-jump package
 (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
