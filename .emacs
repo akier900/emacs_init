@@ -15,6 +15,11 @@
 ;; map alt-o to switch between open windows
 (global-set-key (kbd "M-o") 'other-window)
 
+;; Get rid of annoying prompt every time I want to follow a symbolic link
+(setq vc-follow-symlinks nil)
+;; ALso disable org prompt. 
+(setq org-confirm-babel-evaluate nil)
+
 ;; setup for straight.el. This allows moving between computers and
 ;; automatic installation of missing packages
 
@@ -54,6 +59,7 @@
 (straight-use-package 'auctex)
 (straight-use-package 'auto-complete-auctex)
 (straight-use-package 'flymake)
+(straight-use-package 'flycheck)
 (straight-use-package 'whole-line-or-region)
 (straight-use-package 'git)
 (straight-use-package 'helm-org)
@@ -75,6 +81,9 @@
 (straight-use-package 'nyan-mode)
 (straight-use-package 'dumb-jump)
 (straight-use-package 'elpy)
+(straight-use-package 'py-autopep8)
+(straight-use-package 'ggtags)
+
 
 ;; ========================
 ;; Development Setup
@@ -83,7 +92,42 @@
 (elpy-enable)
 
 
+;; only leave uncommented if working in linux
+;; Enable Flycheck
+(when (require 'flycheck nil t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
 
+;; Enable autopep8 autoformatter
+(require 'py-autopep8)
+(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+
+;; ggtags setup
+(require 'ggtags)
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+              (ggtags-mode 1))))
+
+(define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
+(define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
+(define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
+(define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
+(define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
+(define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
+
+(define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
+
+
+
+;; require files for auto-completion "as you type"
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+(add-to-list 'company-backends 'company-c-headers)
+p
+;;===========================================
+;; Development setup end
+;;===========================================
 
 
 
@@ -92,20 +136,13 @@
 (require 'dired-x)
 (require 'sage-shell-mode)
 
-;; require files for auto-completion "as you type"
-(require 'company)
-(add-hook 'after-init-hook 'global-company-mode)
-(add-to-list 'company-backends 'company-c-headers)
 
 ;; This is only needed once near the top of file. This sets up use of package 'use-package'
 (eval-when-compile
   (require 'use-package))
 
-
-
 ;; Bind M-/ to M-x hippie-expand instead of dabbrev
 (global-set-key "\M- " 'hippie-expand)
-
 
 ;; display tooltips in echo area instead of seperate frame
 (tooltip-mode -1)
@@ -136,6 +173,9 @@
 
 
 
+
+;; Octave mode SETUP ===============================================
+
 ;; adding hooks for associating octave with .m files
 (add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
 
@@ -157,16 +197,21 @@
 		(font-lock-mode 1))))
 
 
+;; Octave mode SETUP end  ===============================================
 
 
+
+;;  Magit setup ==================================
 ;; global shortcut key for magit-status command
 (global-set-key (kbd "C-x g") 'magit-status)
 
 ;; allow info to visit links to 'gitman' info manual
 (setq magit-view-git-manual-method 'man)
+;;  Magit setup end  ==================================
 
 
 
+;; Org Mode ===========================================
 ;; Do not confirm before evaluation
 (setq org-confirm-babel-evaluate nil)
 
@@ -178,6 +223,11 @@
 
 ;; Show images after evaluating code blocks.
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+
+;; Org Mode ===========================================
+
+
+
 
  ;; recentf package setup
 (require 'recentf)
@@ -237,7 +287,7 @@
  '(asm-comment-char 64)
  '(custom-enabled-themes '(granger))
  '(custom-safe-themes
-   '("b267f390ae9919ae61fd6b9973971585ed71bc069a08196b136fd0389d4bc12b" "f6f566f0c8e76d5339bd9368b816a7e57f4fb318e9795033e47d60e8dc121bf2" "730277652b2e8eeb072604bc779a5782f7a4fbc0cf7803c69601b4be8a681d87" "dba1b403539040029374556514170fab030572b7a99d031cb0c29deca5872524" "8a881af89b6790a905bae2f11bb0b93010ebcd010bdc79104087aef77b22d8d7" "35ce30aa61c3d288dfb6f0687420d8773c6281e77cf07dc9dc9e9e9c315d29ae" "ff9df472cd58c2c226e8a11c36b2bc88e95eeb1666740ecb46e0155ce55073af" "03db8a813340989af5bd1bc24578d5e0cac295dcaaf30dc9546891bea0249900" "f2a626e8b41f12afbf3acc081dde9387b85b80525dbc70e9b61850a774c37e7a" "8da4938e0e5754d199ef23087edbddfadf78ecbacbd49b6c766d64296310e3e3" "9e009e887a64cffcb6e51946a63562ccbb3b177a8cd285571a5737757793baf5" "84c307eb4d445f8cff00eb315939652c8cfa7d1e08cc16861df8fdd2c07b66ff" default))
+   '("72a81c54c97b9e5efcc3ea214382615649ebb539cb4f2fe3a46cd12af72c7607" "b267f390ae9919ae61fd6b9973971585ed71bc069a08196b136fd0389d4bc12b" "f6f566f0c8e76d5339bd9368b816a7e57f4fb318e9795033e47d60e8dc121bf2" "730277652b2e8eeb072604bc779a5782f7a4fbc0cf7803c69601b4be8a681d87" "dba1b403539040029374556514170fab030572b7a99d031cb0c29deca5872524" "8a881af89b6790a905bae2f11bb0b93010ebcd010bdc79104087aef77b22d8d7" "35ce30aa61c3d288dfb6f0687420d8773c6281e77cf07dc9dc9e9e9c315d29ae" "ff9df472cd58c2c226e8a11c36b2bc88e95eeb1666740ecb46e0155ce55073af" "03db8a813340989af5bd1bc24578d5e0cac295dcaaf30dc9546891bea0249900" "f2a626e8b41f12afbf3acc081dde9387b85b80525dbc70e9b61850a774c37e7a" "8da4938e0e5754d199ef23087edbddfadf78ecbacbd49b6c766d64296310e3e3" "9e009e887a64cffcb6e51946a63562ccbb3b177a8cd285571a5737757793baf5" "84c307eb4d445f8cff00eb315939652c8cfa7d1e08cc16861df8fdd2c07b66ff" default))
  '(display-line-numbers t)
  '(gas-comment-char 59)
  '(inhibit-startup-screen t)
@@ -307,6 +357,10 @@
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 
 
+
+
+
+;;  Sage shell Mode ==============================
 ;; Turn on eldoc-mode in Sage terminal and in Sage source files
 (add-hook 'sage-shell-mode-hook #'eldoc-mode)
 (add-hook 'sage-shell:sage-mode-hook #'eldoc-mode)
@@ -332,10 +386,23 @@
 (eval-after-load "auto-complete-sage"
   '(setq sage-shell:completion-function 'completion-at-point))
 
+;;  Sage shell Mode setup end ==============================
+
+
+
+
+
+
+
+
+
 ;; Activation for dumb-jump package
 (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
 
 
+
+
+;; Code to fix emacs erros that pop up in newest version
 (defun load-history-filename-element (file-regexp)
   "Get the first elt of `load-history' whose car matches FILE-REGEXP.
 Return nil if there isn't one."
@@ -349,3 +416,11 @@ Return nil if there isn't one."
   (setq loads (cdr loads)
         load-elt (and loads (car loads)))))
     load-elt))
+
+
+
+
+
+
+
+
