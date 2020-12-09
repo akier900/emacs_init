@@ -74,6 +74,19 @@
 (straight-use-package 'sublime-themes)
 (straight-use-package 'nyan-mode)
 (straight-use-package 'dumb-jump)
+(straight-use-package 'elpy)
+
+;; ========================
+;; Development Setup
+;; ========================
+;; Enable elpy
+(elpy-enable)
+
+
+
+
+
+
 
 ;; Enable dired-x for additional dired commands
 (require 'dired-x)
@@ -222,7 +235,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(asm-comment-char 64)
- '(custom-enabled-themes '(spolsky))
+ '(custom-enabled-themes '(granger))
  '(custom-safe-themes
    '("b267f390ae9919ae61fd6b9973971585ed71bc069a08196b136fd0389d4bc12b" "f6f566f0c8e76d5339bd9368b816a7e57f4fb318e9795033e47d60e8dc121bf2" "730277652b2e8eeb072604bc779a5782f7a4fbc0cf7803c69601b4be8a681d87" "dba1b403539040029374556514170fab030572b7a99d031cb0c29deca5872524" "8a881af89b6790a905bae2f11bb0b93010ebcd010bdc79104087aef77b22d8d7" "35ce30aa61c3d288dfb6f0687420d8773c6281e77cf07dc9dc9e9e9c315d29ae" "ff9df472cd58c2c226e8a11c36b2bc88e95eeb1666740ecb46e0155ce55073af" "03db8a813340989af5bd1bc24578d5e0cac295dcaaf30dc9546891bea0249900" "f2a626e8b41f12afbf3acc081dde9387b85b80525dbc70e9b61850a774c37e7a" "8da4938e0e5754d199ef23087edbddfadf78ecbacbd49b6c766d64296310e3e3" "9e009e887a64cffcb6e51946a63562ccbb3b177a8cd285571a5737757793baf5" "84c307eb4d445f8cff00eb315939652c8cfa7d1e08cc16861df8fdd2c07b66ff" default))
  '(display-line-numbers t)
