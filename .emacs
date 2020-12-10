@@ -45,44 +45,45 @@
   (load bootstrap-file nil 'nomessage))
 
 ;; install all necessary packages via straight.el package
-(straight-use-package 'use-package)
-(straight-use-package 'el-patch)
-(straight-use-package 'org)
-(straight-use-package 'org-bullets)
-(straight-use-package 'helm)
-(straight-use-package 'magit)
-(straight-use-package 'recentf)
-(straight-use-package 'recentf-ext)
-(straight-use-package 'verilog-mode)
-(straight-use-package 'yasnippet-snippets)
-(straight-use-package 'flyparens)
 (straight-use-package 'auctex)
 (straight-use-package 'auto-complete-auctex)
-(straight-use-package 'flymake)
-(straight-use-package 'flycheck)
-(straight-use-package 'whole-line-or-region)
-(straight-use-package 'git)
-(straight-use-package 'helm-org)
-(straight-use-package 'helm-c-moccur)
-(straight-use-package 'helm-c-yasnippet)
-(straight-use-package 'helm-bibtex)
-(straight-use-package 'helm-bibtexkey)
-(straight-use-package 'sr-speedbar)
+(straight-use-package 'auto-complete-sage)
+(straight-use-package 'cc-mode)
 (straight-use-package 'company)
-(straight-use-package 'company-math)
 (straight-use-package 'company-c-headers)
 (straight-use-package 'company-jedi)
-(straight-use-package 'cc-mode)
-(straight-use-package 'header2)
-(straight-use-package 'auto-complete-sage)
-(straight-use-package 'helm-sage)
-(straight-use-package 'sage-shell-mode)
-(straight-use-package 'sublime-themes)
-(straight-use-package 'nyan-mode)
+(straight-use-package 'company-math)
 (straight-use-package 'dumb-jump)
+(straight-use-package 'el-patch)
 (straight-use-package 'elpy)
-(straight-use-package 'py-autopep8)
+(straight-use-package 'flycheck)
+(straight-use-package 'flymake)
+(straight-use-package 'flyparens)
 (straight-use-package 'ggtags)
+(straight-use-package 'git)
+(straight-use-package 'header2)
+(straight-use-package 'helm)
+(straight-use-package 'helm-bibtex)
+(straight-use-package 'helm-bibtexkey)
+(straight-use-package 'helm-c-moccur)
+(straight-use-package 'helm-c-yasnippet)
+(straight-use-package 'helm-org)
+(straight-use-package 'helm-sage)
+(straight-use-package 'magit)
+(straight-use-package 'nyan-mode)
+(straight-use-package 'org)
+(straight-use-package 'org-bullets)
+(straight-use-package 'py-autopep8)
+(straight-use-package 'recentf)
+(straight-use-package 'recentf-ext)
+(straight-use-package 'smartparens)
+(straight-use-package 'sage-shell-mode)
+(straight-use-package 'sr-speedbar)
+(straight-use-package 'sublime-themes)
+(straight-use-package 'use-package)
+(straight-use-package 'verilog-mode)
+(straight-use-package 'whole-line-or-region)
+(straight-use-package 'yasnippet-snippets)
 
 
 ;; ========================
@@ -104,7 +105,7 @@
 
 ;; ggtags setup
 (require 'ggtags)
-(add-hook 'c-mode-common-hook
+(add-hook 'c-mode-common-hook 'hs-minor-mode
           (lambda ()
             (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
               (ggtags-mode 1))))
@@ -119,12 +120,49 @@
 (define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
 
 
+;; smartparens setup
+(require 'smartparens-config)
+(show-smartparens-global-mode +1)
+(smartparens-global-mode 1)
+
+;; When you press RET, the curly braces auto add a newline
+(sp-with-modes '(c-mode c++-mode)
+	       (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
+	       (sp-local-pair "/*" "*/" :post-handlers '((" | " "SPC")
+							 ("* ||\n[i]" "RET"))))
+	     
+
+;; map F5 to compile
+(global-set-key (kbd "<f5>") (lambda ()
+			       (interactive)
+			       (setq-local compilation-read-command nil)
+			       (call-interactively 'compile)))
+
+
+
+
+
 
 ;; require files for auto-completion "as you type"
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 (add-to-list 'company-backends 'company-c-headers)
-p
+
+
+
+;; configure flycheck for sage-shell-mode and python-mode
+;; Code taken from sage-shell-mode documentation 
+(dolist (ckr '(python-pylint python-flake8))
+  (flycheck-add-mode ckr 'sage-shell:sage-mode))
+
+(defun sage-shell:flycheck-turn-on ()
+  "Enable flycheck-mode only in file ended with py."
+  (when (let ((bfn (buffer-file-name)))
+	  (and bfn (string-match (rx ".py" eol) bfn)))
+    (flycheck-mode 1)))
+
+(add-hook 'python-mode-hook 'sage-shell:flycheck-turn-on)
+
 ;;===========================================
 ;; Development setup end
 ;;===========================================
@@ -259,7 +297,7 @@ p
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Fira Code Medium" :foundry "outline" :slant normal :weight normal :height 113 :width normal))))
+ '(default ((t (:family "Fira Code" :foundry "CTDB" :slant normal :weight semi-bold :height 98 :width normal))))
  '(cursor ((t (:background "orange1")))))
 
 ;; Trigger an insertion of relevant text depending on mode of
@@ -284,10 +322,14 @@ p
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["black" "red3" "ForestGreen" "yellow3" "blue" "magenta3" "DeepSkyBlue" "gray50"])
  '(asm-comment-char 64)
  '(custom-enabled-themes '(granger))
  '(custom-safe-themes
-   '("72a81c54c97b9e5efcc3ea214382615649ebb539cb4f2fe3a46cd12af72c7607" "b267f390ae9919ae61fd6b9973971585ed71bc069a08196b136fd0389d4bc12b" "f6f566f0c8e76d5339bd9368b816a7e57f4fb318e9795033e47d60e8dc121bf2" "730277652b2e8eeb072604bc779a5782f7a4fbc0cf7803c69601b4be8a681d87" "dba1b403539040029374556514170fab030572b7a99d031cb0c29deca5872524" "8a881af89b6790a905bae2f11bb0b93010ebcd010bdc79104087aef77b22d8d7" "35ce30aa61c3d288dfb6f0687420d8773c6281e77cf07dc9dc9e9e9c315d29ae" "ff9df472cd58c2c226e8a11c36b2bc88e95eeb1666740ecb46e0155ce55073af" "03db8a813340989af5bd1bc24578d5e0cac295dcaaf30dc9546891bea0249900" "f2a626e8b41f12afbf3acc081dde9387b85b80525dbc70e9b61850a774c37e7a" "8da4938e0e5754d199ef23087edbddfadf78ecbacbd49b6c766d64296310e3e3" "9e009e887a64cffcb6e51946a63562ccbb3b177a8cd285571a5737757793baf5" "84c307eb4d445f8cff00eb315939652c8cfa7d1e08cc16861df8fdd2c07b66ff" default))
+   '("987b709680284a5858d5fe7e4e428463a20dfabe0a6f2a6146b3b8c7c529f08b" "72a81c54c97b9e5efcc3ea214382615649ebb539cb4f2fe3a46cd12af72c7607" "b267f390ae9919ae61fd6b9973971585ed71bc069a08196b136fd0389d4bc12b" "f6f566f0c8e76d5339bd9368b816a7e57f4fb318e9795033e47d60e8dc121bf2" "730277652b2e8eeb072604bc779a5782f7a4fbc0cf7803c69601b4be8a681d87" "dba1b403539040029374556514170fab030572b7a99d031cb0c29deca5872524" "8a881af89b6790a905bae2f11bb0b93010ebcd010bdc79104087aef77b22d8d7" "35ce30aa61c3d288dfb6f0687420d8773c6281e77cf07dc9dc9e9e9c315d29ae" "ff9df472cd58c2c226e8a11c36b2bc88e95eeb1666740ecb46e0155ce55073af" "03db8a813340989af5bd1bc24578d5e0cac295dcaaf30dc9546891bea0249900" "f2a626e8b41f12afbf3acc081dde9387b85b80525dbc70e9b61850a774c37e7a" "8da4938e0e5754d199ef23087edbddfadf78ecbacbd49b6c766d64296310e3e3" "9e009e887a64cffcb6e51946a63562ccbb3b177a8cd285571a5737757793baf5" "84c307eb4d445f8cff00eb315939652c8cfa7d1e08cc16861df8fdd2c07b66ff" default))
  '(display-line-numbers t)
  '(gas-comment-char 59)
  '(inhibit-startup-screen t)
