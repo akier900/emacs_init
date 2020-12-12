@@ -84,6 +84,8 @@
 (straight-use-package 'verilog-mode)
 (straight-use-package 'whole-line-or-region)
 (straight-use-package 'yasnippet-snippets)
+(straight-use-package 'ein)
+
 
 ;; ========================
 ;; Development Setup
@@ -159,6 +161,16 @@
     (flycheck-mode 1)))
 
 (add-hook 'python-mode-hook 'sage-shell:flycheck-turn-on)
+
+
+
+
+;; Use IPython for REPL
+(setq python-shell-interpreter "jupyter"
+      python-shell-interpreter-args "console --simple-prompt"
+      python-shell-prompt-detect-failure-warning nil)
+(add-to-list 'python-shell-completion-native-disabled-interpreters
+	     "jupyter")
 
 ;;===========================================
 ;; Development setup end
