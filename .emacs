@@ -85,7 +85,6 @@
 (straight-use-package 'whole-line-or-region)
 (straight-use-package 'yasnippet-snippets)
 
-
 ;; ========================
 ;; Development Setup
 ;; ========================
@@ -137,8 +136,6 @@
 			       (interactive)
 			       (setq-local compilation-read-command nil)
 			       (call-interactively 'compile)))
-
-
 
 
 
