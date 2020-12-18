@@ -5,18 +5,30 @@
 ;; company
 ;;======================================================================
 
+;;; Code:
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
-
 (require 'company-box)
-(add-hook 'global-company-mode-hook 'company-box-mode)
+(add-hook 'after-init-hook 'company-box-mode)
+
+
+(add-hook 'anaconda-mode-hook
+	  (lambda ()
+	    (set (make-local-variable 'company-backends) '(company-anaconda company-jedi))))
+
+;(add-hook 'cc-mode-hook
+;	  (lambda ()
+;	    (set (make-local-variable 'company-backends) 'company-c-)))
+
 
 (add-to-list 'company-backends #'company-tabnine)
-
 ;; trigger completion immediately
 (setq company-idle-delay 0)
 ;; Number the candidtates (use M-1, M-2, et... to select correct completion)
 (setq company-show-numbers t)
+;; 
+
+
 
 ;; 
 ;; python mode setup
@@ -61,8 +73,5 @@
 ;;     (define-key map "d" #'kana-details)
 ;;     map)
 ;;   "Keymap for `kana-mode'.")
-
-
-
 
 

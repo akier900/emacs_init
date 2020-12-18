@@ -4,16 +4,16 @@
 
 ;; myPackages contains a list of package names  
 
-(defvar myPackages
-  '(
-    better-defaults			;some more sane defaults
-    ))
+;(defvar myPackages
+;  '(
+;    material-theme    			;theme
+;    ))
 
 ;; scans myPackages. if not installed, do it now!
-(mapc #'(lambda (package)
-	  (unless (package-installed-p package)
-	    (package-install package)))
-      myPackages)
+;(mapc #'(lambda (package)
+;	  (unless (package-installed-p package)
+;	    (package-install package)))
+;     myPackages)
 
 
 ;; setup for straight.el
@@ -61,6 +61,8 @@
 (straight-use-package 'elpy)
 (straight-use-package 'ein)
 (straight-use-package 'flycheck)	;use only arch/linux
+(straight-use-package 'python-info)
+(straight-use-package 'py-autopep8)
 
 ;; ======================================================================
 ;; package specific keybindings (minor mode dependent)
@@ -106,7 +108,7 @@
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 
 
-(helm-mode 1)
+
 
 
 
@@ -144,9 +146,11 @@
 
 ;; ;; only leave uncommented if working in linux/arch
 ;; ;; Enable Flycheck
-(when (require 'flycheck nil t)
-  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-  (add-hook 'elpy-mode-hook 'flycheck-mode))
+;(when (require 'flycheck nil t)
+;  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+;  (add-hook 'elpy-mode-hook 'flycheck-mode))
+
+(global-flycheck-mode)
 
 ;; ;; Enable autopep8 autoformatter
 (require 'py-autopep8)

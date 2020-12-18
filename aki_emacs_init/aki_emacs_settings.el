@@ -37,7 +37,10 @@
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
 
-
+;; enable ido mode for file and directory searching.
+(ido-mode 1)
+(setq ido-everywhere t)
+(setq ido-enable-flex-matching t)
 
 ;;this snippet needed as of emacs 27.1
 ;;Code to fix emacs erros that pop up in newest version
@@ -55,6 +58,12 @@ Return nil if there isn't one."
   (setq loads (cdr loads)
         load-elt (and loads (car loads)))))
     load-elt))
+
+
+
+
+
+
 
 
 
