@@ -58,16 +58,22 @@
 (straight-use-package 'company-shell)   ;shell completions
 (straight-use-package 'company-box)	;cool box popups for completions
 (straight-use-package 'company-tabnine)	;AI completion (helps a lot)
+(straight-use-package 'company-irony)
+(straight-use-package 'company-irony-c-headers)
+
+(straight-use-package 'irony)
 (straight-use-package 'elpy)
 (straight-use-package 'ein)
 (straight-use-package 'flycheck)	;use only arch/linux
 (straight-use-package 'python-info)
 (straight-use-package 'py-autopep8)
+(straight-use-package 'ecb)
 
-;; ======================================================================
+
+
+;; ========================================================
 ;; package specific keybindings (minor mode dependent)
-;; ======================================================================
-
+;; ========================================================
 
 ;; corral auto delimeter hotkeys
 (global-set-key (kbd "M-9") 'corral-parentheses-backward)
@@ -106,7 +112,6 @@
 ;; Improve system default commands with helm counterparts
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
-
 
 
 
@@ -156,6 +161,33 @@
 (require 'py-autopep8)
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 
+
+
+;; setup EDE
+(require 'ede)
+(global-ede-mode)
+
+;; ECB (Emacs code browser) depends on EDE
+(require 'ecb)
+
+
+;; enable semantic mode
+;; before enabling, its better to configure
+;; semantic-default-submodes
+(require 'cc-mode)
+(require 'semantic/ia)
+(require 'semantic/bovine/gcc)
+
+
+(setq-mode-local c-mode semanticdb-find-default-throttle
+		 '(project unload system recursive))
+
+(global-semanticdb-minor-mode 1)
+(global-semantic-idle-scheduler-mode 1)
+
+
+
+(semantic-mode 1)			
 
 
 
