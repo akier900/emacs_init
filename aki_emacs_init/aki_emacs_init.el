@@ -40,8 +40,8 @@ able to get the current file's full path regardless of the method used."
 ;;----------------------------------------------------------------------
 ;; load basic emacs settings
 
-(load (aki-get-fullpath "aki_emacs_settings"))
-
+;(load (aki-get-fullpath "aki_emacs_settings"))
+(load (aki-get-fullpath "aki_cpp_clean"))
 ;;----------------------------------------------------------------------
 
 
@@ -55,7 +55,8 @@ able to get the current file's full path regardless of the method used."
 ;; load files
 ;;----------------------------------------------------------------------
 
-(load (aki-get-fullpath "aki_emacs_settings_external_packages"))
-(load (aki-get-fullpath "aki_emacs_keybinding_mode_specific"))
-;(load (aki-get-fullpath "aki_emacs_misc"))
+;(load (aki-get-fullpath "aki_emacs_settings_external_packages"))
+;(load (aki-get-fullpath "aki_emacs_keybinding_mode_specific"))
+;;(load (aki-get-fullpath "aki_emacs_misc"))
+
 

@@ -75,3 +75,12 @@
 ;;   "Keymap for `kana-mode'.")
 
 
+
+
+
+
+
+
+
+
+

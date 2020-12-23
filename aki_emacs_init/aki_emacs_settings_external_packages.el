@@ -58,11 +58,15 @@
 (straight-use-package 'company-shell)   ;shell completions
 (straight-use-package 'company-box)	;cool box popups for completions
 (straight-use-package 'company-tabnine)	;AI completion (helps a lot)
+(straight-use-package 'lsp-mode)	;
 (straight-use-package 'elpy)
 (straight-use-package 'ein)
 (straight-use-package 'flycheck)	;use only arch/linux
 (straight-use-package 'python-info)
 (straight-use-package 'py-autopep8)
+
+
+
 
 ;; ======================================================================
 ;; package specific keybindings (minor mode dependent)
