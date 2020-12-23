@@ -42,17 +42,6 @@
 (setq ido-everywhere t)
 (setq ido-enable-flex-matching t)
 
-
-
-;; make shortcut for compilation
-(global-set-key (kbd "<f5>") (lambda()
-			       (interactive)
-			       (setq-local compilation-read-command nil)
-			       (call-interactively 'compile)))
-
-
-
-
 ;;this snippet needed as of emacs 27.1
 ;;Code to fix emacs erros that pop up in newest version
 

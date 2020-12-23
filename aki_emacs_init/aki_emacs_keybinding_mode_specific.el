@@ -1,9 +1,9 @@
 ;; mode specific settings and hooks
-;; This file also contains setup for company mode
 
-;;===============================================================
+
+;;======================================================================
 ;; company
-;;===============================================================
+;;======================================================================
 
 ;;; Code:
 (require 'company)
@@ -11,47 +11,22 @@
 (require 'company-box)
 (add-hook 'after-init-hook 'company-box-mode)
 
+
 (add-hook 'anaconda-mode-hook
 	  (lambda ()
 	    (set (make-local-variable 'company-backends) '(company-anaconda company-jedi))))
 
-;; Setup for c++
-(add-hook 'c++-mode-hook 'irony-mode)
-(add-hook 'cc-mode-hook 'irony-mode)
-(add-hook 'objc-mode-hook 'irony-mode)
-
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+;(add-hook 'cc-mode-hook
+;	  (lambda ()
+;	    (set (make-local-variable 'company-backends) 'company-c-)))
 
 
-;; irony mode (c,c++)
-(require 'company-irony-c-headers)
-;; load with 'irony mode as a grouped backends
-(eval-after-load 'company
-  '(add-to-list
-    'company-backends '(company-irony-c-headers company-irony)))
-
-;; replace the 'completion-at-point' and 'complete-symbol'
-;; bindings in irony-mode's function
-(defun my-irony-mode-hook ()
-  (define-key irony-mode-map [remap completion-at-point]
-    'irony-completion-at-point-async)
-  (define-key irony-mode-map [remap complete-symbol]
-    'irony-completion-at-point-async))
-(add-hook 'irony-mode-hook 'my-irony-mode-hook)
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-
-
-
-;; Add TabNine to company backends
 (add-to-list 'company-backends #'company-tabnine)
-
-;; General TabNine settings
 ;; trigger completion immediately
 (setq company-idle-delay 0)
 ;; Number the candidtates (use M-1, M-2, et... to select correct completion)
 (setq company-show-numbers t)
 ;; 
-
 
 
 
