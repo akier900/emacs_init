@@ -92,6 +92,9 @@ Return nil if there isn't one."
 (straight-use-package 'company-c-headers)
 (straight-use-package 'company-native-complete)
 (straight-use-package 'lsp-treemacs)
+(straight-use-package 'all-the-icons)
+(straight-use-package 'all-the-icons-dired)
+(straight-use-package 'treemacs-all-the-icons)
 (straight-use-package 'helm-lsp)
 (straight-use-package 'dap-mode)	;debugger support. Probably need more config
 (straight-use-package 'ccls)		;c++ language server. configured with lsp-mode
@@ -120,7 +123,7 @@ Return nil if there isn't one."
  
 ;; lsp-mode-setup
 (require 'lsp-mode)
-(add-hook 'c++-mode-hook #'lsp)
+(add-hook 'prog-mode-hook #'lsp)
 
 
 
@@ -143,9 +146,6 @@ Return nil if there isn't one."
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 
-;; lsp mode 
-
-(define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol)
 
 
 ;; company box mode
@@ -158,11 +158,19 @@ Return nil if there isn't one."
       company-idle-delay 0.0)		;Default is 0.2
 
 
-;; which-key setup
+;; LSP mode / which-key setup, prefix def changed in lsp.el. line ~1000
 (add-hook 'lsp-mode-hook 'lsp-enable-which-key-integration)
-(setq lsp-keymap-prefix "C-c l")
-     
+(add-hook 'lsp-mode-hook 'which-key-mode)
+(define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol)
 
+(require 'all-the-icons)
+(require 'dap-cpptools)
+
+
+(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+
+
+;; c/c++ language server
 (require 'ccls)
 
 
@@ -186,5 +194,14 @@ Return nil if there isn't one."
 
 ;; set function to f5 shortcut
 (global-set-key [f5] 'code-compile)
+
+
+
+
+
+
+
+
+
 
 
