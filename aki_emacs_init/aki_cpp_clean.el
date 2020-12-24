@@ -145,6 +145,8 @@ Return nil if there isn't one."
 
 ;; which-key setup
 (add-hook 'lsp-mode 'which-key-mode)
+(setq lsp-keymap-prefix "C-c l")
+     
 
 ;; yasnippet setup
 (require 'yasnippet)
@@ -165,12 +167,5 @@ Return nil if there isn't one."
 
 ;; set function to f5 shortcut
 (global-set-key [f5] 'code-compile)
-
-
-
-
-
-
-
 
 
