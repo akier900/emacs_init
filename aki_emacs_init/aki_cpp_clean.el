@@ -103,7 +103,7 @@ Return nil if there isn't one."
 (straight-use-package 'smart-semicolon)
 (straight-use-package 'tiny)
 (straight-use-package 'flycheck)
-
+(straight-use-package 'company-quickhelp)
 
 ;; flycheck setup
 (global-flycheck-mode)
@@ -153,13 +153,19 @@ Return nil if there isn't one."
 (add-hook 'company-mode-hook 'company-box-mode)
 
 (setq company-show-numbers t)
-
+(company-quickhelp-mode)
+(setq company-minimum-prefix-length 1
+      company-idle-delay 0.0)		;Default is 0.2
 
 
 ;; which-key setup
-(add-hook 'lsp-mode 'which-key-mode)
+(add-hook 'lsp-mode-hook 'lsp-enable-which-key-integration)
 (setq lsp-keymap-prefix "C-c l")
      
+
+(require 'ccls)
+
+
 
 ;; yasnippet setup
 (require 'yasnippet)
