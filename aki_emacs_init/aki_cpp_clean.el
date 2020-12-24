@@ -1,6 +1,12 @@
-;;;; BASICS (package independent) ============================================================
+ ;;;; BASICS (package independent) ============================================================
 ;;;Code:
 
+;; add melpa repo
+(add-to-list 'package-archives
+	     '("melpa" . "http://melpa.org/packages/") t)
+
+;; refresh packages everytime we open emacs (hopefully)
+(add-hook 'after-init-hook 'package-refresh-contents)
 
 
 ;; line numbers always!
@@ -80,6 +86,10 @@ Return nil if there isn't one."
 (straight-use-package 'yasnippet-classic-snippets)
 (straight-use-package 'company)		;"complete-anything" when it works..
 (straight-use-package 'company-box)	;cool box popups for completions
+(straight-use-package 'company-math)
+(straight-use-package 'company-statistics)
+(straight-use-package 'company-c-headers)
+(straight-use-package 'company-native-complete)
 (straight-use-package 'lsp-treemacs)
 (straight-use-package 'helm-lsp)
 (straight-use-package 'dap-mode)	;debugger support. Probably need more config
@@ -88,9 +98,14 @@ Return nil if there isn't one."
 (straight-use-package 'helm-company)
 (straight-use-package 'which-key)
 (straight-use-package 'modern-cpp-font-lock)
+(straight-use-package 'smartparens)	;smart parentheses
+(straight-use-package 'smart-semicolon)
+(straight-use-package 'tiny)
+
+(add-hook 'prog-mode-hook #'smart-semicolon-mode)
 
 ;; use better sublime-theme (need this after installing sublime-themes)
-(load-theme 'wilson t)
+(load-theme 'leuven t)
 
  
 ;; lsp-mode-setup
@@ -103,6 +118,9 @@ Return nil if there isn't one."
 ;; helm and lsp-helm setup
 (require 'helm)
 (require 'helm-config)
+
+(add-hook 'after-init-hook 'global-company-mode)
+
 
 (eval-after-load 'company
   '(progn
@@ -122,6 +140,7 @@ Return nil if there isn't one."
 (require 'company-box)
 (add-hook 'company-mode 'company-box-mode)
 
+(setq company-show-numbers t)
 
 
 ;; which-key setup
@@ -133,6 +152,22 @@ Return nil if there isn't one."
 
 
 ;; function for easy compilation of  C/C++ files using f5
+(defun code-compile ()
+  (interactive)
+  (unless (file-exists-p "Makefile")
+    (set (make-local-variable 'compile-command)
+	 (let ((file (file-name-nondirectory buffer-file-name)))
+	   (format "%s -o %s %s"
+		   (if (equal (file-name-extension file) "cpp") "g++" "gcc" )
+		   (file-name-sans-extension file)
+		   file)))
+    (compile compile-command)))
+
+;; set function to f5 shortcut
+(global-set-key [f5] 'code-compile)
+
+
+
 
 
 
