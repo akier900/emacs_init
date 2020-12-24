@@ -14,7 +14,7 @@
 
 
 ;; use better default font
-(set-frame-font "Fira Code 11" nil t)
+(set-frame-font "Hack 11" nil t)
 
 
 
@@ -72,6 +72,7 @@ Return nil if there isn't one."
 
 ;; install pacakges (general)
 (straight-use-package 'doom-themes)
+(straight-use-package 'inkpot-theme)
 (straight-use-package 'sublime-themes)
 (straight-use-package 'magit)
 (straight-use-package 'git)
@@ -101,16 +102,27 @@ Return nil if there isn't one."
 (straight-use-package 'smartparens)	;smart parentheses
 (straight-use-package 'smart-semicolon)
 (straight-use-package 'tiny)
+(straight-use-package 'flycheck)
 
+
+;; flycheck setup
+(global-flycheck-mode)
+
+;; smart-semicolon for programming modes
 (add-hook 'prog-mode-hook #'smart-semicolon-mode)
 
+
 ;; use better sublime-theme (need this after installing sublime-themes)
-(load-theme 'leuven t)
+(load-theme 'inkpot t)
+
+
 
  
 ;; lsp-mode-setup
 (require 'lsp-mode)
 (add-hook 'c++-mode-hook #'lsp)
+
+
 
 ;; lsp-treemacs
 (lsp-treemacs-sync-mode 1)
@@ -138,9 +150,10 @@ Return nil if there isn't one."
 
 ;; company box mode
 (require 'company-box)
-(add-hook 'company-mode 'company-box-mode)
+(add-hook 'company-mode-hook 'company-box-mode)
 
 (setq company-show-numbers t)
+
 
 
 ;; which-key setup
