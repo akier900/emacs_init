@@ -3,10 +3,10 @@
 
 ;; add melpa repo
 (add-to-list 'package-archives
-	     '("melpa" . "http://melpa.org/packages/") t)
+	     '("melpa" . "https://melpa.org/packages/") t)
 
 ;; refresh packages everytime we open emacs (hopefully)
-(add-hook 'after-init-hook 'package-refresh-contents)
+;(add-hook 'after-init-hook 'package-refresh-contents)
 
 
 ;; line numbers always!
@@ -67,11 +67,10 @@ Return nil if there isn't one."
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-
-
+(setq straight-allow-recipe-inheritance nil)
 
 ;; install pacakges (general)
-(straight-use-package 'doom-themes)
+;(straight-use-package 'doom-themes)
 (straight-use-package 'inkpot-theme)
 (straight-use-package 'sublime-themes)
 (straight-use-package 'magit)
@@ -94,11 +93,11 @@ Return nil if there isn't one."
 (straight-use-package 'lsp-treemacs)
 (straight-use-package 'all-the-icons)
 (straight-use-package 'all-the-icons-dired)
-(straight-use-package 'treemacs-all-the-icons)
+;(straight-use-package 'treemacs-all-the-icons)
+; for some reason, my surface doesnt like this and cant find the package despite it being there.
 (straight-use-package 'helm-lsp)
 (straight-use-package 'dap-mode)	;debugger support. Probably need more config
 (straight-use-package 'ccls)		;c++ language server. configured with lsp-mode
-(straight-use-package 'eglot)
 (straight-use-package 'helm-company)
 (straight-use-package 'which-key)
 (straight-use-package 'modern-cpp-font-lock)
@@ -110,6 +109,18 @@ Return nil if there isn't one."
 
 ;; flycheck setup
 (global-flycheck-mode)
+
+
+;; so hopefully clang can find flippin iostream header
+;; still doesnt seem to work though so whatevs I guess
+(add-hook 'c++-mode-hook
+	  (lambda () (setq flycheck-clang-language-standard "c++11")))
+(add-hook 'c++-mode-hook
+	  (lambda () (setq flycheck-clang-standard-library "stdc++")))
+(add-hook 'c++-mode-hook
+	  (lambda () (setq flycheck-clang-include-path
+			   (list "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\lib\\gcc\\x86_64-w64-mingw32\\8.1.0\\include\\c++\\"))))
+
 
 ;; smart-semicolon for programming modes
 (add-hook 'prog-mode-hook #'smart-semicolon-mode)
@@ -180,26 +191,38 @@ Return nil if there isn't one."
 (yas-global-mode 1)
 
 
-;; function for easy compilation of  C/C++ files using f5
+
 (defun code-compile ()
   (interactive)
-  (unless (file-exists-p "Makefile")
+  (unless (or (file-exists-p "Makefile")
+	      (file-exists-p "makefile"))
     (set (make-local-variable 'compile-command)
 	 (let ((file (file-name-nondirectory buffer-file-name)))
-	   (format "%s -o %s %s"
-		   (if (equal (file-name-extension file) "cpp") "g++" "gcc" )
-		   (file-name-sans-extension file)
-		   file)))
-    (compile compile-command)))
+	   (format "%s  %s -o  %s -Wall -std=c++11 "
+		 (if (equal "cpp" "cpp") "g++" "gcc")
+		 file (file-name-sans-extension file))))
+		 (compile compile-command)))
+
 
 ;; set function to f5 shortcut
 (global-set-key [f5] 'code-compile)
 
 
+(defun code-run ()
+  "This function instead runs the code using the same basic function
+structure as code-compile. The file is assumed to have the same base
+name but with extension .exe. For example: foo.cpp is compiled and
+executable is assumed to be foo.exe"
+  (interactive)
+  (set (make-local-variable 'compile-command)
+	(concat (file-name-sans-extension buffer-file-name)
+		".exe"))
+  (compile compile-command))
 
+;; set code-run to f5's neighbor
+(global-set-key [f6] 'code-run)
 
-
-
+;;; aki_cpp_clean.el ends here
 
 
 
