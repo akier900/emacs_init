@@ -58,5 +58,3 @@ able to get the current file's full path regardless of the method used."
 ;(load (aki-get-fullpath "aki_emacs_settings_external_packages"))
 ;(load (aki-get-fullpath "aki_emacs_keybinding_mode_specific"))
 ;;(load (aki-get-fullpath "aki_emacs_misc"))
-
-

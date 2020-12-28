@@ -34,9 +34,6 @@
 ;; python mode setup
 ;;
 
-
-
-
 (defun my-python-mode-hook ()
   (progn
     (elpy-enable)			;enable elpy
