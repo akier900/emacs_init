@@ -22,11 +22,6 @@
 ;; make projectile use better fd command (available thru chocolatey
 (setq projectile-generic-command "fd . -type f -print0")
 
-;; Project specific compilation buffers
-(setq compilation-buffer-name-function
-      #'projectile-compilation-buffer-name)
-(setq compilation-buffer-name-function
-      #'projectile-current-project-buffer-p)
 
 
 

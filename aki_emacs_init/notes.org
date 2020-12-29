@@ -1,11 +1,13 @@
 * Most useful changes to config include
   
 ** helm-c-yasnippet
-
-   *** This uses keybinding "C-c y" to search through possible yasnippet expansions. Especially useful for elisp files so far.
-
+  *** This uses keybinding "C-c y" to search through possible yasnippet expansions. Especially useful for elisp files so far.
+   
 * org mode changes
-
-  ** org-mode-superstar package?
+  *** org-mode-superstar package
+  org-bullets descendant.
+  
+  *** org-beautify-mode
+  nuff sed.
 
   

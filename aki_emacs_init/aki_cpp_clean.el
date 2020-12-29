@@ -134,19 +134,33 @@ Return nil if there isn't one."
 
 ;; org mode packages
 (straight-use-package 'org)
+(straight-use-package 'org-superstar)
+(straight-use-package 'org-beautify-theme)
 
 ;; org-mode setup
-
-
-
-
 (require 'org)
 
+;; org-superstar (org-bullets descendant
+(require 'org-superstar)
+(add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
+
+
+
+
+
 ;; use theme (needs to be after themes are installed
-(load-theme 'dorsey t)
+(load-theme 'fogus t)
+(load-theme 'org-beautify t)	;make org-mode pretty
 
 ;; use better default font
 (set-frame-font "Fira Code Retina 11" nil t)
+
+;; gdb use many-windows mode by default
+(setq
+ gdb-many-windows t
+ gdb-show-main t			;show file containing main at startup
+ )
+
 
 
 ;; keybindings for company mode
@@ -325,7 +339,7 @@ Return nil if there isn't one."
 	      (file-exists-p "makefile"))
     (set (make-local-variable 'compile-command)
 	 (let ((file (file-name-nondirectory buffer-file-name)))
-	   (format "%s  %s -o  %s -Wall -std=c++11 "
+	   (format "%s  %s -o  %s -Wall -g -std=c++11 "
 		 (if (equal "cpp" "cpp") "g++" "gcc")
 		 file (file-name-sans-extension file))))
 		 (compile compile-command)))
