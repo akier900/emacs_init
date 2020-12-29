@@ -1,7 +1,10 @@
+;;; aki_cpp_clean.el --- This is my init file which started as an environment for c/c++ but is growing into something more
 ;;;; BASICS (package independent) ============================================================
 ;;;Code:
 
 ;; add melpa repo
+;;; Code:
+
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
 			 ("org" . "https://orgmode.org/elpa/")
 			 ("elpa" . "https://elpa.gnu.org/packages/")))
@@ -44,10 +47,6 @@ Return nil if there isn't one."
     load-elt))
 
 
-;; enable ido mode for file and directory searching
-(ido-mode 1)
-(setq ido-everywhere t)
-(setq ido-enable-flex-matching t)
 
 ;; keybindings
 (global-set-key (kbd "M-o") 'other-window)
@@ -83,11 +82,13 @@ Return nil if there isn't one."
 (straight-use-package 'helm)
 (straight-use-package 'hippie-exp-ext)
 (straight-use-package 'hippie-namespace)
+(straight-use-package 'flx-ido)
 
 ;; packages for programming
 (straight-use-package 'yasnippet)
 (straight-use-package 'yasnippet-classic-snippets)
 (straight-use-package 'projectile)
+(straight-use-package 'org-projectile)
 
 ;; company general packages
 (straight-use-package 'company)		;"complete-anything" when it works..
@@ -129,10 +130,20 @@ Return nil if there isn't one."
 (straight-use-package 'helm-org)
 (straight-use-package 'helm-projectile)
 (straight-use-package 'helm-ag)
+(straight-use-package 'helm-c-yasnippet)
 
-		      
+;; org mode packages
+(straight-use-package 'org)
+
+;; org-mode setup
+
+
+
+
+(require 'org)
+
 ;; use theme (needs to be after themes are installed
-(load-theme 'leuven t)
+(load-theme 'dorsey t)
 
 ;; use better default font
 (set-frame-font "Fira Code Retina 11" nil t)
@@ -162,6 +173,22 @@ Return nil if there isn't one."
 (add-hook 'dap-stopped-hook (lambda (arg)
 				    (call-interactively #'dap-hydra)))
 	 
+
+
+
+
+
+(require 'flx-ido)
+(ido-mode 1)
+(flx-ido-mode 1)
+(setq ido-everywhere t)
+;; disable ido faces to see flx highlights
+(setq ido-enable-flex-matching t)
+(setq ido-use-faces nil)
+
+
+;; for "modern" machines, optimize garbage collection for flx-ido
+(setq gc-cons-threshold 20000000)
 
 
 ;; hdl/verilog setup (hdl_checker must be in path and is installed by pip)
@@ -218,14 +245,25 @@ Return nil if there isn't one."
 (load (aki-get-fullpath "setup-helm-gtags"))			;change path for specific machine
 
 
+;; helm-c-yasnippet setup
+;; this should allow easier searching for snippets
+(require 'yasnippet)
+(require 'helm-c-yasnippet)
+(setq helm-yas-space-match-any-greedy t)
+(global-set-key (kbd "C-c y") 'helm-yas-complete)
+(yas-global-mode 1)
+(yas-load-directory "~/.emacs.d/straight/repos/yasnippet-classic-snippets/snippets/emacs-lisp-mode/")
+
+
+
+
+ ;; check for errors
 ;;  helm-org setup
 ;(add-to-list 'helm-completing-read-handlers-alist '(org-capture . helm-org-completing-read-tags))
 ;(add-to-list 'helm-completing-read-handlers-alist '(org-set-tags . helm-org-completing-read-tags))
 
-;; helm-projectile setup
-(require 'helm-projectile)
-(helm-projectile-on)
-
+;; PROJECTILE and helm-projectile setup
+(load (aki-get-fullpath "setup-projectile"))
 ;;;; HELM SETUP end
 
 ;;;; COMPANY MODE SETUP start
@@ -251,7 +289,10 @@ Return nil if there isn't one."
 
 (require 'company-c-headers)
 (add-to-list 'company-backends 'company-c-headers)
-(add-to-list 'company-c-headers-path-system "/usr/include/c++/10.2.0") ;only valid for arch on desktop
+;; only valid for for arch on desktop
+;(add-to-list 'company-c-headers-path-system "/usr/iinclude/c++/10.2.0")
+;only valid for windows on surface
+(add-to-list 'company-c-headers-path-system "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\lib\\gcc\\x86_64-w64-mingw32\\8.1.0\\include\\c++")
 ;; company mode setup end
 
 ;; projectile setup
@@ -273,14 +314,13 @@ Return nil if there isn't one."
 
 
 
-;; yasnippet setup
-(require 'yasnippet)
-(yas-global-mode 1)
 
 
 
 (defun code-compile ()
   (interactive)
+  " this is just a simple function to compile c/c++ single source files
+   or small projects with a custom command"
   (unless (or (file-exists-p "Makefile")
 	      (file-exists-p "makefile"))
     (set (make-local-variable 'compile-command)
@@ -294,6 +334,8 @@ Return nil if there isn't one."
 ;; set function to f5 shortcut
 (global-set-key [f5] 'code-compile)
 
+;;; Commentary:
+;; 
 
 ;; (defun code-run ()
 ;;   "This function instead runs the code using the same basic function
