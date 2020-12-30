@@ -83,9 +83,11 @@ Return nil if there isn't one."
 (straight-use-package 'hippie-exp-ext)
 (straight-use-package 'hippie-namespace)
 (straight-use-package 'flx-ido)
+(straight-use-package 'gnu-elpa-keyring-update)
 
 ;; packages for programming
 (straight-use-package 'yasnippet)
+(straight-use-package 'yasnippet-snippets)
 (straight-use-package 'yasnippet-classic-snippets)
 (straight-use-package 'projectile)
 (straight-use-package 'org-projectile)
@@ -102,6 +104,7 @@ Return nil if there isn't one."
 (straight-use-package 'treemacs)
 (straight-use-package 'all-the-icons)
 (straight-use-package 'all-the-icons-dired)
+(straight-use-package 'treemacs-all-the-icons)
 
 ;; misc
 (straight-use-package 'helm-company)
@@ -136,24 +139,48 @@ Return nil if there isn't one."
 (straight-use-package 'org)
 (straight-use-package 'org-superstar)
 (straight-use-package 'org-beautify-theme)
+(straight-use-package 'org-anki)
+(straight-use-package 'org-chef)
+(straight-use-package 'org-dashboard)
+(straight-use-package 'org-edit-latex)
+(straight-use-package 'org-fancy-priorities)
+(straight-use-package 'org-gcal)
+(straight-use-package 'org-link-beautify)
+(straight-use-package 'org-make-toc)
+(straight-use-package 'org-onenote)
+(straight-use-package 'org-pomodoro)
+(straight-use-package 'org-recur)
+(straight-use-package 'org-rich-yank)
+
+;; misc
+(straight-use-package 'gscholar-bibtex)
+(straight-use-package 'live-py-mode)	;interactive python coding (live preview)
+
+
 
 ;; org-mode setup
 (require 'org)
+(require 'org-gcal)
+(require 'org-make-toc)
 
+;; org-rich-yank setup
+(require 'org-rich-yank)
+(eval-after-load 'org
+  '(define-key org-mode-map (kbd "C-M-y") #'org-rich-yank))
+
+	 
 ;; org-superstar (org-bullets descendant
 (require 'org-superstar)
 (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
 
 
-
-
-
 ;; use theme (needs to be after themes are installed
-(load-theme 'fogus t)
+(load-theme 'wilson t)
 (load-theme 'org-beautify t)	;make org-mode pretty
 
 ;; use better default font
-(set-frame-font "Fira Code Retina 11" nil t)
+(add-to-list 'default-frame-alist '(font . "Mononoki 14"))
+
 
 ;; gdb use many-windows mode by default
 (setq
