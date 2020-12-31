@@ -20,6 +20,8 @@
 (global-display-line-numbers-mode)
 
 
+;; get rid of startup screen
+(setq inhibit-splash-screen t)
 
 
 
@@ -157,9 +159,34 @@ Return nil if there isn't one."
 (straight-use-package 'live-py-mode)	;interactive python coding (live preview)
 
 
+;; enable which-key globally
+(add-hook 'after-init-hook 'which-key-mode)
 
 ;; org-mode setup
 (require 'org)
+
+
+;; create intermediate states for TODO items
+(setq org-todo-keywords
+      '((sequence "TODO" "IN-PROGRESS" "REVIEW" "DONE")))
+
+;; make bold font red in org-mode since sometimes fontification seems lacking
+(add-to-list 'org-emphasis-alist
+	     '("*" (:foreground "red")))
+
+(add-to-list 'org-emphasis-alist
+	     '("/" (:foreground "yellow")))
+
+;; stop asking for confirmation everytime I wanna eval some src code block
+(setq org-confirm-babel-evaluate nil)
+
+
+;; fontify code in code blocks
+(setq org-src-fontify-natively t)
+
+;; hide emphasis marks.
+(setq org-hide-emphasis-markers t)
+
 (require 'org-gcal)
 (require 'org-make-toc)
 
@@ -175,11 +202,11 @@ Return nil if there isn't one."
 
 
 ;; use theme (needs to be after themes are installed
-(load-theme 'wilson t)
-(load-theme 'org-beautify t)	;make org-mode pretty
+(load-theme 'inkpot t)			;Best theme I've found so far 
+(load-theme 'org-beautify t)		;make org-mode pretty
 
 ;; use better default font
-(add-to-list 'default-frame-alist '(font . "Mononoki 14"))
+(add-to-list 'default-frame-alist '(font . "Mononoki 12")) ;Kawaii as fuck
 
 
 ;; gdb use many-windows mode by default
