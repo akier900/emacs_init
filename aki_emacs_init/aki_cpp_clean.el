@@ -2,6 +2,9 @@
 ;;;; BASICS (package independent) ============================================================
 ;;;Code:
 
+
+
+
 ;; add melpa repo
 ;;; Code:
 
@@ -19,10 +22,12 @@
 ;; line numbers always!
 (global-display-line-numbers-mode)
 
+;; visual line mode always!
+(global-visual-line-mode)
 
 ;; get rid of startup screen
 (setq inhibit-splash-screen t)
-
+(setq visible-bell t)
 
 
 (setq next-line-add-newlines t)		;auto add new lines at end of buffer
@@ -126,6 +131,8 @@ Return nil if there isn't one."
 (straight-use-package 'dap-mode)
 (straight-use-package 'ccls)
 
+;; company-tabnine
+(straight-use-package 'company-tabnine)
 
 ;; Specific Helm mode packages
 (straight-use-package 'helm-company)
@@ -157,6 +164,8 @@ Return nil if there isn't one."
 ;; misc
 (straight-use-package 'gscholar-bibtex)
 (straight-use-package 'live-py-mode)	;interactive python coding (live preview)
+(straight-use-package 'function-args)
+
 
 
 ;; enable which-key globally
@@ -215,16 +224,6 @@ Return nil if there isn't one."
  gdb-show-main t			;show file containing main at startup
  )
 
-
-
-;; keybindings for company mode
-;; make it so we can navigate completion popups with C-n and C-p
-;; instead of default M-n and M-p
-(with-eval-after-load 'company
-  (define-key company-active-map (kbd "M-n") nil)
-  (define-key company-active-map (kbd "M-p") nil)
-  (define-key company-active-map (kbd "C-n") 'company-select-next)
-  (define-key company-active-map (kbd "C-p") 'company-select-previous))
 
 
 ;; lsp-mode-setup/ dap-mode-setup
@@ -323,12 +322,24 @@ Return nil if there isn't one."
 (yas-load-directory "~/.emacs.d/straight/repos/yasnippet-classic-snippets/snippets/emacs-lisp-mode/")
 
 
+;; function-args package setup (shows inline arguments hint for c/c++ function at point
+(fa-config-default)
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+(set-default 'semantic-case-fold t)
 
 
  ;; check for errors
 ;;  helm-org setup
 ;(add-to-list 'helm-completing-read-handlers-alist '(org-capture . helm-org-completing-read-tags))
 ;(add-to-list 'helm-completing-read-handlers-alist '(org-set-tags . helm-org-completing-read-tags))
+
+
+;; better general company-mode settings
+(setq company-show-numbers t)
+(company-quickhelp-mode)
+(setq company-minimum-prefix-length 1
+      company-idle-delay 0.0)		;Default is 0.2
+
 
 ;; PROJECTILE and helm-projectile setup
 (load (aki-get-fullpath "setup-projectile"))
@@ -343,17 +354,28 @@ Return nil if there isn't one."
 (add-hook 'company-mode-hook 'company-box-mode)
 
 
-(eval-after-load 'company
-  '(progn
-     (define-key company-mode-map (kbd "C-:") 'helm-company)
-     (define-key company-active-map (kbd "C-:") 'helm-company)))
+;; keybindings for company mode
+;; make it so we can navigate completion popups with C-n and C-p
+;; instead of default M-n and M-p
+(with-eval-after-load 'company
+  (define-key company-active-map (kbd "M-n") nil)
+  (define-key company-active-map (kbd "M-p") nil)
+  (define-key company-active-map (kbd "C-n") 'company-select-next)
+  (define-key company-active-map (kbd "C-p") 'company-select-previous)
+  (define-key company-mode-map (kbd "C-:") 'helm-company)
+  (define-key company-active-map (kbd "C-:") 'helm-company))
 
 
-;; better settings
-(setq company-show-numbers t)
-(company-quickhelp-mode)
-(setq company-minimum-prefix-length 1
-      company-idle-delay 0.0)		;Default is 0.2
+
+
+;; company-tabnine setup
+(require 'company-tabnine)
+(add-to-list 'company-backends #'company-tabnine)
+
+
+
+
+
 
 (require 'company-c-headers)
 (add-to-list 'company-backends 'company-c-headers)
