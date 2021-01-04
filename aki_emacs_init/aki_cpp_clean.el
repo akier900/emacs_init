@@ -5,6 +5,10 @@
 
 
 
+(server-start)
+
+
+
 ;; add melpa repo
 ;;; Code:
 
@@ -17,6 +21,8 @@
 ;; refresh packages everytime we open emacs (hopefully)
 (unless package-archive-contents
   (package-refresh-contents))
+
+
 
 
 ;; line numbers always!
@@ -112,6 +118,7 @@ Return nil if there isn't one."
 (straight-use-package 'all-the-icons)
 (straight-use-package 'all-the-icons-dired)
 (straight-use-package 'treemacs-all-the-icons)
+(straight-use-package 'parrot)
 
 ;; misc
 (straight-use-package 'helm-company)
@@ -166,48 +173,18 @@ Return nil if there isn't one."
 (straight-use-package 'live-py-mode)	;interactive python coding (live preview)
 (straight-use-package 'function-args)
 
-
+;; parrot-mode animation
+(require 'parrot)
+(parrot-mode)
+(global-set-key (kbd "C-c C-p") 'parrot-rotate-prev-word-at-point)
+(global-set-key (kbd "C-c C-n") 'parrot-rotate-next-word-at-point)
 
 ;; enable which-key globally
 (add-hook 'after-init-hook 'which-key-mode)
 
 ;; org-mode setup
-(require 'org)
+(load (aki-get-fullpath "org-babel-config")) ;external file
 
-
-;; create intermediate states for TODO items
-(setq org-todo-keywords
-      '((sequence "TODO" "IN-PROGRESS" "REVIEW" "DONE")))
-
-;; make bold font red in org-mode since sometimes fontification seems lacking
-(add-to-list 'org-emphasis-alist
-	     '("*" (:foreground "red")))
-
-(add-to-list 'org-emphasis-alist
-	     '("/" (:foreground "yellow")))
-
-;; stop asking for confirmation everytime I wanna eval some src code block
-(setq org-confirm-babel-evaluate nil)
-
-
-;; fontify code in code blocks
-(setq org-src-fontify-natively t)
-
-;; hide emphasis marks.
-(setq org-hide-emphasis-markers t)
-
-(require 'org-gcal)
-(require 'org-make-toc)
-
-;; org-rich-yank setup
-(require 'org-rich-yank)
-(eval-after-load 'org
-  '(define-key org-mode-map (kbd "C-M-y") #'org-rich-yank))
-
-	 
-;; org-superstar (org-bullets descendant
-(require 'org-superstar)
-(add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
 
 
 ;; use theme (needs to be after themes are installed
@@ -424,6 +401,40 @@ Return nil if there isn't one."
 ;; set function to f5 shortcut
 (global-set-key [f5] 'code-compile)
 
+
+
+
+;; add matlab-emacs mode files to load-path
+(add-to-list 'load-path "~/matlab-emacs-src");
+(load-library "matlab-load")
+
+
+(eval-after-load 'c++-mode
+  '(define-key c++-mode-map [f9] 'dap-add-breakpoint))
+  
+
+;; disable python-not-found warnings 
+(defvar treemacs-no-load-time-warnings t)
+
+
+
+;; octave mode stuffs
+(setq auto-mode-alist
+      (cons '("\\.m$" . octave-mode) auto-mode-alist))
+
+(add-hook 'octave-mode-hook
+	  (lambda ()
+	    (abbrev-mode 1)
+	    (auto-fill-mode 1)
+	    (if (eq window-system 'x)
+		(font-lock-mode 1))))
+
+
+;;;
+
+
+
+
 ;;; Commentary:
 ;; 
 
@@ -442,3 +453,17 @@ Return nil if there isn't one."
 ;; (global-set-key [f6] 'code-run)
 
 ;;; aki_cpp_clean.el ends here
+
+
+
+
+
+
+
+
+
+
+
+
+
+
