@@ -22,7 +22,8 @@
 (unless package-archive-contents
   (package-refresh-contents))
 
-
+;; setup auto-revert behavior for all file buffers as well as dired buffers
+(global-auto-revert-mode)
 
 
 ;; line numbers always!
@@ -172,6 +173,20 @@ Return nil if there isn't one."
 (straight-use-package 'gscholar-bibtex)
 (straight-use-package 'live-py-mode)	;interactive python coding (live preview)
 (straight-use-package 'function-args)
+(straight-use-package 'csv)		;for dealing with comma-seperated value files
+
+
+;; CEDET
+(straight-use-package 'speedbar)
+
+
+;;;; End of package installations
+
+
+
+;;;; Packages setup
+
+
 
 ;; parrot-mode animation
 (require 'parrot)
@@ -402,12 +417,25 @@ Return nil if there isn't one."
 (global-set-key [f5] 'code-compile)
 
 
+;; cedet setup
+(semantic-mode 1)
+(global-ede-mode 1)
+
+
+
+
+(defun my-semantic-hook ()
+  "Add imenu integration to semantic."
+  (imenu-add-to-menubar "TAGS"))
+(add-hook 'semantic-init-hooks 'my-semantic-hook)
 
 
 ;; add matlab-emacs mode files to load-path
-(add-to-list 'load-path "~/matlab-emacs-src");
-(load-library "matlab-load")
+;(add-to-list 'load-path "~/matlab-emacs-src/")
 
+(add-to-list 'load-path "C:\\Users\\Eric\\AppData\\Roaming\\matlab-emacs-mode\\matlab-emacs-src\\") ;value for Desktop (Windows OS)
+(load-library "matlab-load")
+(matlab-cedet-setup)
 
 (eval-after-load 'c++-mode
   '(define-key c++-mode-map [f9] 'dap-add-breakpoint))

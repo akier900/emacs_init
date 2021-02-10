@@ -1,6 +1,7 @@
 ;; org mode setup
 (require 'org)
 
+(setq org-startup-with-inline-images t)
 
 ;; create intermediate states for TODO items
 (setq org-todo-keywords
@@ -47,3 +48,12 @@
    (C . t)
    (octave . t)))
 
+
+
+
+
+;; setup mathml converter (using LaTeXML installed with chocolatey)
+(setq org-latex-to-mathml-convert-command
+      "latexmlmath \"%i\" --presentationmathml=%o")
+
+;;;org-babel-config.el
