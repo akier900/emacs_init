@@ -8,7 +8,6 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["#1c1e26" "#e95678" "#09f7a0" "#fab795" "#21bfc2" "#6c6f93" "#59e3e3" "#c7c9cb"])
- '(custom-enabled-themes '(doom-outrun-electric))
  '(custom-safe-themes
    '("730a87ed3dc2bf318f3ea3626ce21fb054cd3a1471dcd59c81a4071df02cb601" "188fed85e53a774ae62e09ec95d58bb8f54932b3fd77223101d036e3564f9206" "2f1518e906a8b60fac943d02ad415f1d8b3933a5a7f75e307e6e9a26ef5bf570" "5036346b7b232c57f76e8fb72a9c0558174f87760113546d3a9838130f1cdb74" "990e24b406787568c592db2b853aa65ecc2dcd08146c0d22293259d400174e37" default))
  '(fci-rule-color "#f9cec3")

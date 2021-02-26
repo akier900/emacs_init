@@ -174,13 +174,41 @@ Return nil if there isn't one."
 (straight-use-package 'live-py-mode)	;interactive python coding (live preview)
 (straight-use-package 'function-args)
 (straight-use-package 'csv)		;for dealing with comma-seperated value files
-
+(straight-use-package 'material-theme)
 
 ;; CEDET
 (straight-use-package 'speedbar)
 
 
+;; for python mode. Ive given up modularizing this file a long time ago.
+(straight-use-package 'elpy)
+(straight-use-package 'company-jedi)
+(straight-use-package 'company-anaconda)
+(straight-use-package 'anaconda-mode)
+
 ;;;; End of package installations
+
+
+;; Enable elpy
+(elpy-enable)
+
+
+;; company backends for python
+(defun my-python-mode-hook ()
+  (add-to-list 'company-backends 'company-jedi)
+  (add-to-list 'company-backends 'company-anaconda))
+
+(add-hook 'python-mode-hook 'my-python-mode-hook)
+(add-hook 'python-mode-hook 'anaconda-mode)
+(add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+ 
+
+
+
+;; recentf setup. Can now use C-x C-r to bring up list of last 25 opened buffers
+(recentf-mode 1)
+(setq recentf-max-menu-items 25)
+(global-set-key "\C-x\ \C-r" 'recentf-open-files)
 
 
 
@@ -203,7 +231,7 @@ Return nil if there isn't one."
 
 
 ;; use theme (needs to be after themes are installed
-(load-theme 'inkpot t)			;Best theme I've found so far 
+(load-theme 'material t)
 (load-theme 'org-beautify t)		;make org-mode pretty
 
 ;; use better default font
@@ -266,7 +294,7 @@ Return nil if there isn't one."
 
 
 ;; flycheck setup
-(global-flycheck-mode)
+;(global-flycheck-mode)			
 
 
 
