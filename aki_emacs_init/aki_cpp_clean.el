@@ -8,6 +8,9 @@
 (server-start)
 
 
+;; default font
+(set-face-attribute 'default nil :family "Fira Code Retina" :height 110)
+
 
 ;; add melpa repo
 ;;; Code:
@@ -89,6 +92,9 @@ Return nil if there isn't one."
 ;(straight-use-package 'doom-themes)
 (straight-use-package 'inkpot-theme)
 (straight-use-package 'sublime-themes)
+(straight-use-package 'plan9-theme)
+
+(load-theme 'plan9)
 
 ;; git, helm, hippie expand
 (straight-use-package 'magit)
@@ -122,7 +128,6 @@ Return nil if there isn't one."
 (straight-use-package 'parrot)
 
 ;; misc
-(straight-use-package 'helm-company)
 (straight-use-package 'which-key)	;helps to keep track of keybindings.
 (straight-use-package 'smartparens)	;smart parentheses
 (straight-use-package 'smart-semicolon)
@@ -130,6 +135,8 @@ Return nil if there isn't one."
 (straight-use-package 'flycheck)
 (straight-use-package 'company-quickhelp)
 (straight-use-package 'cpp-auto-include) ;auto add necessary c++ header files
+
+
 
 ;; lsp-mode packages (fuck irony-mode)
 (straight-use-package 'lsp-mode)
@@ -143,7 +150,7 @@ Return nil if there isn't one."
 (straight-use-package 'company-tabnine)
 
 ;; Specific Helm mode packages
-(straight-use-package 'helm-company)
+;;(straight-use-package 'helm-company)
 (straight-use-package 'helm-file-preview)
 (straight-use-package 'helm-flycheck)
 (straight-use-package 'helm-gtags)
@@ -159,7 +166,6 @@ Return nil if there isn't one."
 (straight-use-package 'org-anki)
 (straight-use-package 'org-chef)
 (straight-use-package 'org-dashboard)
-(straight-use-package 'org-edit-latex)
 (straight-use-package 'org-fancy-priorities)
 (straight-use-package 'org-gcal)
 (straight-use-package 'org-link-beautify)
@@ -170,8 +176,8 @@ Return nil if there isn't one."
 (straight-use-package 'org-rich-yank)
 
 ;; misc
-(straight-use-package 'gscholar-bibtex)
-(straight-use-package 'live-py-mode)	;interactive python coding (live preview)
+;;(straight-use-package 'gscholar-bibtex)
+;;(straight-use-package 'live-py-mode)	;interactive python coding (live preview)
 (straight-use-package 'function-args)
 (straight-use-package 'csv)		;for dealing with comma-seperated value files
 (straight-use-package 'material-theme)
@@ -197,8 +203,9 @@ Return nil if there isn't one."
 
 ;; company backends for python
 (defun my-python-mode-hook ()
-  (add-to-list 'company-backends 'company-jedi)
   (add-to-list 'company-backends 'company-anaconda))
+  
+  
 
 (add-hook 'python-mode-hook 'my-python-mode-hook)
 (add-hook 'python-mode-hook 'anaconda-mode)
@@ -233,11 +240,7 @@ Return nil if there isn't one."
 
 
 ;; use theme (needs to be after themes are installed
-(load-theme 'material t)
 (load-theme 'org-beautify t)		;make org-mode pretty
-
-;; use better default font
-(add-to-list 'default-frame-alist '(font . "Mononoki 12")) ;Kawaii as fuck
 
 
 ;; gdb use many-windows mode by default
@@ -318,6 +321,13 @@ Return nil if there isn't one."
 
 ;; helm-swoop
 (global-set-key (kbd "M-i") 'helm-swoop)
+
+;; ;; helm-company setup
+;; (autoload 'helm-company "helm-company")
+;; (eval-after-load 'company
+;;   '(progn
+;;      (define-key company-mode-map (kbd "C-:") 'helm-company)
+;;      (define-key company-active-map (kbd "C-:") 'helm-company)))
 
 
 ;;helm file preview setup
