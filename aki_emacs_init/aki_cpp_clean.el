@@ -8,16 +8,13 @@
 (server-start)
 
 
+;; change to home dirctory so that emacs doesnt launch from chocolatey shim location
+(cd "~/")
+
 ;; default font
 (set-face-attribute 'default nil :family "Fira Code Retina" :height 110)
 
 
-;; add melpa repo
-;;; Code:
-
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			 ("org" . "https://orgmode.org/elpa/")
-			 ("elpa" . "https://elpa.gnu.org/packages/")))
 
 
 
@@ -110,7 +107,7 @@ Return nil if there isn't one."
 (straight-use-package 'yasnippet-snippets)
 (straight-use-package 'yasnippet-classic-snippets)
 (straight-use-package 'projectile)
-(straight-use-package 'org-projectile)
+;(straight-use-package 'org-projectile)
 
 ;; company general packages
 (straight-use-package 'company)		;"complete-anything" when it works..
@@ -160,20 +157,21 @@ Return nil if there isn't one."
 (straight-use-package 'helm-c-yasnippet)
 
 ;; org mode packages
-(straight-use-package 'org)
-(straight-use-package 'org-superstar)
-(straight-use-package 'org-beautify-theme)
-(straight-use-package 'org-anki)
-(straight-use-package 'org-chef)
-(straight-use-package 'org-dashboard)
-(straight-use-package 'org-fancy-priorities)
-(straight-use-package 'org-gcal)
-(straight-use-package 'org-link-beautify)
-(straight-use-package 'org-make-toc)
-(straight-use-package 'org-onenote)
-(straight-use-package 'org-pomodoro)
-(straight-use-package 'org-recur)
-(straight-use-package 'org-rich-yank)
+(straight-use-package 'ox-mediawiki)
+;; (straight-use-package 'org)
+;; (straight-use-package 'org-superstar)
+;; (straight-use-package 'org-beautify-theme)
+;; (straight-use-package 'org-anki)
+;; (straight-use-package 'org-chef)
+;; (straight-use-package 'org-dashboard)
+;; (straight-use-package 'org-fancy-priorities)
+;; (straight-use-package 'org-gcal)
+;; (straight-use-package 'org-link-beautify)
+;; (straight-use-package 'org-make-toc)
+;; (straight-use-package 'org-onenote)
+;; (straight-use-package 'org-pomodoro)
+;; (straight-use-package 'org-recur)
+;; (straight-use-package 'org-rich-yank)
 
 ;; misc
 ;;(straight-use-package 'gscholar-bibtex)
@@ -181,6 +179,7 @@ Return nil if there isn't one."
 (straight-use-package 'function-args)
 (straight-use-package 'csv)		;for dealing with comma-seperated value files
 (straight-use-package 'material-theme)
+(straight-use-package 'flyspell)
 
 ;; CEDET
 (straight-use-package 'speedbar)
@@ -222,6 +221,19 @@ Return nil if there isn't one."
 
 
 ;;;; Packages setup
+;; setting up hunspell for spell checking
+(setq ispell-program-name "C://Hunspell//bin//hunspell.exe")
+(setq ispell-local-dictionary "en_US")
+
+
+
+
+;; add melpa repo
+;;; Code:
+
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+;			 ("org" . "https://orgmode.org/elpa/")
+			 ("elpa" . "https://elpa.gnu.org/packages/")))
 
 
 
@@ -235,12 +247,12 @@ Return nil if there isn't one."
 (add-hook 'after-init-hook 'which-key-mode)
 
 ;; org-mode setup
-(load (aki-get-fullpath "org-babel-config")) ;external file
+;(load (aki-get-fullpath "org-babel-config")) ;external file
 
 
 
 ;; use theme (needs to be after themes are installed
-(load-theme 'org-beautify t)		;make org-mode pretty
+;(load-theme 'org-beautify t)		;make org-mode pretty
 
 
 ;; gdb use many-windows mode by default
