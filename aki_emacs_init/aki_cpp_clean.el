@@ -103,11 +103,14 @@ Return nil if there isn't one."
 (straight-use-package 'gnu-elpa-keyring-update)
 
 ;; packages for programming
+(straight-use-package 'powershell)
+(straight-use-package 'gnuplot)
 (straight-use-package 'yasnippet)
 (straight-use-package 'yasnippet-snippets)
 (straight-use-package 'yasnippet-classic-snippets)
 (straight-use-package 'projectile)
 ;(straight-use-package 'org-projectile)
+(straight-use-package 'unicode-math-input)
 
 ;; company general packages
 (straight-use-package 'company)		;"complete-anything" when it works..
