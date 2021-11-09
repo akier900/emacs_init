@@ -89,9 +89,8 @@ Return nil if there isn't one."
 ;(straight-use-package 'doom-themes)
 (straight-use-package 'inkpot-theme)
 (straight-use-package 'sublime-themes)
-(straight-use-package 'plan9-theme)
 
-(load-theme 'plan9)
+;;(load-theme 'inkpot) 
 
 ;; git, helm, hippie expand
 (straight-use-package 'magit)
@@ -111,6 +110,7 @@ Return nil if there isn't one."
 (straight-use-package 'projectile)
 ;(straight-use-package 'org-projectile)
 (straight-use-package 'unicode-math-input)
+(straight-use-package 'spice-mode)
 
 ;; company general packages
 (straight-use-package 'company)		;"complete-anything" when it works..
@@ -135,7 +135,8 @@ Return nil if there isn't one."
 (straight-use-package 'flycheck)
 (straight-use-package 'company-quickhelp)
 (straight-use-package 'cpp-auto-include) ;auto add necessary c++ header files
-
+(straight-use-package 'htmlize)
+(straight-use-package 'highlight2clipboard)
 
 
 ;; lsp-mode packages (fuck irony-mode)
@@ -540,13 +541,50 @@ Return nil if there isn't one."
 
 
 
+;; handy code for converting buffer to postscript then piping to ps2pdf
+;; in order to create a pdf version of emacs buffer with syntax highlighting.
+
+;; name of command is modi/pdf-print-buffer-with-faces
+
+
+(require 'ps-print)
+(when (executable-find "ps2pdf")
+  (defun modi/pdf-print-buffer-with-faces (&optional filename)
+    "Print file in the current buffer as pdf, including font, color, and
+underline information.  This command works only if you are using a window system,
+so it has a way to determine color values.
+
+C-u COMMAND prompts user where to save the Postscript file (which is then
+converted to PDF at the same location."
+    (interactive (list (if current-prefix-arg
+                           (ps-print-preprint 4)
+                         (concat (file-name-sans-extension (buffer-file-name))
+                                 ".ps"))))
+    (ps-print-with-faces (point-min) (point-max) filename)
+    (shell-command (concat "ps2pdf " filename))
+    (delete-file filename)
+    (message "Deleted %s" filename)
+    (message "Wrote %s" (concat (file-name-sans-extension filename) ".pdf"))))
+
+
+
+;; use svls systemverilog language server
+(with-eval-after-load 'lsp-mode
+  (add-to-list 'lsp-language-id-configuration
+	       '(verilog-mode . "verilog"))
+
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection '("svls"))
+		    :activation-fn (lsp-activate-on "svls")
+		    :server-id 'theme-check)))
 
 
 
 
+(require 'lsp-verilog)
 
+(custom-set-variables
+  '(lsp-clients-svlangserver-launchConfiguration "/tools/verilator -sv --lint-only -Wall")
+  '(lsp-clients-svlangserver-formatCommand "/tools/verible-verilog-format"))
 
-
-
-
-
+(add-hook 'verilog-mode-hook #'lsp-deferred)
