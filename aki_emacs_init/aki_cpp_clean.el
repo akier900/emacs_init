@@ -5,7 +5,7 @@
 
 
 
-(server-start)
+;;(server-start)
 
 
 ;; change to home dirctory so that emacs doesnt launch from chocolatey shim location
@@ -96,6 +96,7 @@ Return nil if there isn't one."
 (straight-use-package 'magit)
 (straight-use-package 'git)
 (straight-use-package 'helm)
+(straight-use-package 'helm-company)
 (straight-use-package 'hippie-exp-ext)
 (straight-use-package 'hippie-namespace)
 (straight-use-package 'flx-ido)
@@ -124,7 +125,7 @@ Return nil if there isn't one."
 (straight-use-package 'treemacs)
 (straight-use-package 'all-the-icons)
 (straight-use-package 'all-the-icons-dired)
-(straight-use-package 'treemacs-all-the-icons)
+;(straight-use-package 'treemacs-all-the-icons)
 (straight-use-package 'parrot)
 
 ;; misc
@@ -204,6 +205,9 @@ Return nil if there isn't one."
 (elpy-enable)
 
 
+;; enable helm globally
+(helm-mode 1)
+
 ;; company backends for python
 (defun my-python-mode-hook ()
   (add-to-list 'company-backends 'company-anaconda))
@@ -226,8 +230,19 @@ Return nil if there isn't one."
 
 ;;;; Packages setup
 ;; setting up hunspell for spell checking
-(setq ispell-program-name "C://Hunspell//bin//hunspell.exe")
+
+;; point to path of hunspell dictionaries (Arch)
+;; dictionary was manually downloaded and place at
+;; ~/Library/Spelling.
+(setenv
+ "DICPATH"
+ (concat (getenv "HOME") "/Library/Spelling"))
+
+
+					;(setq ispell-program-name "C://Hunspell//bin//hunspell.exe") ; Windows path
+(setq ispell-program-name "/usr/bin/hunspell") ;Arch distro path
 (setq ispell-local-dictionary "en_US")
+
 
 
 
@@ -268,10 +283,10 @@ Return nil if there isn't one."
 
 
 ;; lsp-mode-setup/ dap-mode-setup
-(require 'lsp-mode)
+;;(require 'lsp-mode)
 
 ;; helm-lsp
-(define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol)
+;;(define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol)
 
 ;; dap-mode
 (require 'ccls)
@@ -289,7 +304,7 @@ Return nil if there isn't one."
 (require 'flx-ido)
 (ido-mode 1)
 (flx-ido-mode 1)
-(setq ido-everywhere t)
+(setq ido-everywhere nil)
 ;; disable ido faces to see flx highlights
 (setq ido-enable-flex-matching t)
 (setq ido-use-faces nil)
@@ -300,22 +315,22 @@ Return nil if there isn't one."
 
 
 ;; hdl/verilog setup (hdl_checker must be in path and is installed by pip)
-(custom-set-variables
- '(lsp-vhdl-sever 'hdl-checker))
-(add-hook 'verilog-mode-hook 'lsp)
-(add-hook 'vhdl-mode-hook 'lsp)
+;; (custom-set-variables
+;;  '(lsp-vhdl-sever 'hdl-checker))
+;; (add-hook 'verilog-mode-hook 'lsp)
+;; (add-hook 'vhdl-mode-hook 'lsp)
 
 
 ;; c/c++ setup
 ;; hooks for lsp-mode
-(add-hook 'c++-mode-hook  'lsp)
-(add-hook 'c-mode-hook 'lsp)
-(add-hook 'objc-mode-hook 'lsp)
+;;(add-hook 'c++-mode-hook  'lsp)
+;;(add-hook 'c-mode-hook 'lsp)
+;;(add-hook 'objc-mode-hook 'lsp)
 
 
 
 ;; flycheck setup
-;(global-flycheck-mode)			
+(global-flycheck-mode)
 
 
 
@@ -338,12 +353,12 @@ Return nil if there isn't one."
 ;; helm-swoop
 (global-set-key (kbd "M-i") 'helm-swoop)
 
-;; ;; helm-company setup
-;; (autoload 'helm-company "helm-company")
-;; (eval-after-load 'company
-;;   '(progn
-;;      (define-key company-mode-map (kbd "C-:") 'helm-company)
-;;      (define-key company-active-map (kbd "C-:") 'helm-company)))
+;; helm-company setup
+;;(autoload 'helm-company "helm-company")
+(eval-after-load 'company
+  '(progn
+     (define-key company-mode-map (kbd "C-:") 'helm-company)
+     (define-key company-active-map (kbd "C-:") 'helm-company)))
 
 
 ;;helm file preview setup
@@ -386,7 +401,7 @@ Return nil if there isn't one."
 (setq company-show-numbers t)
 (company-quickhelp-mode)
 (setq company-minimum-prefix-length 1
-      company-idle-delay 0.0)		;Default is 0.2
+      company-idle-delay 0.1)		;Default is 0.2
 
 
 ;; PROJECTILE and helm-projectile setup
@@ -417,8 +432,9 @@ Return nil if there isn't one."
 
 
 ;; company-tabnine setup
-(require 'company-tabnine)
-(add-to-list 'company-backends #'company-tabnine)
+;;(require 'company-tabnine)
+;;(add-to-list 'company-backends #'company-tabnine)
+
 
 
 
@@ -430,8 +446,19 @@ Return nil if there isn't one."
 ;; only valid for for arch on desktop
 ;(add-to-list 'company-c-headers-path-system "/usr/iinclude/c++/10.2.0")
 ;only valid for windows on surface
-(add-to-list 'company-c-headers-path-system "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\lib\\gcc\\x86_64-w64-mingw32\\8.1.0\\include\\c++")
+;; (add-to-list 'company-c-headers-path-system  "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\lib\\gcc\\x86_64-w64-mingw32\\8.1.0\\include\\c++")
 ;; company mode setup end
+
+
+(defun ede-object-system-include-path ()
+  "Return the system include path for the current buffer."
+  (when ede-object
+    (ede-system-include-path ede-object)))
+
+
+;; nope, dont uncomment
+;;(set 'company-c-headers-path-system "/usr/include/c++/11.1.0/")
+
 
 ;; projectile setup
 (projectile-mode +1)
@@ -455,6 +482,7 @@ Return nil if there isn't one."
 
 
 
+
 (defun code-compile ()
   (interactive)
   " this is just a simple function to compile c/c++ single source files
@@ -463,7 +491,7 @@ Return nil if there isn't one."
 	      (file-exists-p "makefile"))
     (set (make-local-variable 'compile-command)
 	 (let ((file (file-name-nondirectory buffer-file-name)))
-	   (format "%s  %s -o  %s -Wall -g -std=c++11 "
+	   (format "%s  %s -o  %s -pedantic -Wall -g -std=c++17 "
 		 (if (equal "cpp" "cpp") "g++" "gcc")
 		 file (file-name-sans-extension file))))
 		 (compile compile-command)))
@@ -484,14 +512,15 @@ Return nil if there isn't one."
   "Add imenu integration to semantic."
   (imenu-add-to-menubar "TAGS"))
 (add-hook 'semantic-init-hooks 'my-semantic-hook)
+(global-semantic-idle-summary-mode 1)
 
 
 ;; add matlab-emacs mode files to load-path
 ;(add-to-list 'load-path "~/matlab-emacs-src/")
 
-(add-to-list 'load-path "C:\\Users\\Eric\\AppData\\Roaming\\matlab-emacs-mode\\matlab-emacs-src\\") ;value for Desktop (Windows OS)
-(load-library "matlab-load")
-(matlab-cedet-setup)
+;(add-to-list 'load-path "C:\\Users\\Eric\\AppData\\Roaming\\matlab-emacs-mode\\matlab-emacs-src\\") ;value for Desktop (Windows OS)
+;(load-library "matlab-load")
+;(matlab-cedet-setup)
 
 (eval-after-load 'c++-mode
   '(define-key c++-mode-map [f9] 'dap-add-breakpoint))
@@ -502,16 +531,16 @@ Return nil if there isn't one."
 
 
 
-;; octave mode stuffs
-(setq auto-mode-alist
-      (cons '("\\.m$" . octave-mode) auto-mode-alist))
+;; ;; octave mode stuffs
+;; (setq auto-mode-alist
+;;       (cons '("\\.m$" . octave-mode) auto-mode-alist))
 
-(add-hook 'octave-mode-hook
-	  (lambda ()
-	    (abbrev-mode 1)
-	    (auto-fill-mode 1)
-	    (if (eq window-system 'x)
-		(font-lock-mode 1))))
+;; (add-hook 'octave-mode-hook
+;; 	  (lambda ()
+;; 	    (abbrev-mode 1)
+;; 	    (auto-fill-mode 1)
+;; 	    (if (eq window-system 'x)
+;; 		(font-lock-mode 1))))
 
 
 ;;;
@@ -536,7 +565,6 @@ Return nil if there isn't one."
 ;; ;; set code-run to f5's neighbor
 ;; (global-set-key [f6] 'code-run)
 
-;;; aki_cpp_clean.el ends here
 
 
 
@@ -568,23 +596,47 @@ converted to PDF at the same location."
 
 
 
-;; use svls systemverilog language server
-(with-eval-after-load 'lsp-mode
-  (add-to-list 'lsp-language-id-configuration
-	       '(verilog-mode . "verilog"))
-
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection '("svls"))
-		    :activation-fn (lsp-activate-on "svls")
-		    :server-id 'theme-check)))
 
 
+(setq path-to-ctags "/usr/local/bin/ctags")
 
 
-(require 'lsp-verilog)
+(defun create-tags (dir-name)
+  "Create tags file."
+  (interactive "DDirectory: ")
+  (shell-command
+   (format "%s -f TAGS -e -R %s" path-to-ctags (directory-file-name dir-name))))
 
-(custom-set-variables
-  '(lsp-clients-svlangserver-launchConfiguration "/tools/verilator -sv --lint-only -Wall")
-  '(lsp-clients-svlangserver-formatCommand "/tools/verible-verilog-format"))
 
-(add-hook 'verilog-mode-hook #'lsp-deferred)
+
+;; ;; use svls systemverilog language server
+;; (with-eval-after-load 'lsp-mode
+;;   (add-to-list 'lsp-language-id-configuration
+;; 	       '(verilog-mode . "verilog")))
+
+;;   (lsp-register-client
+;;    (make-lsp-client :new-connection (lsp-stdio-connection '("svls"))
+;; 		    :major-modes '(verilog-mode)
+;; 		    :priority -1
+;; ;		    :activation-fn (lsp-activate-on "verilog")
+;; 		    :server-id 'svls))
+							  
+
+
+
+
+
+
+
+;;(require 'lsp-verilog)
+
+;; (custom-set-variables
+;;   '(lsp-clients-svlangserver-launchConfiguration "/tools/verilator -sv --lint-only -Wall")
+;;   '(lsp-clients-svlangserver-formatCommand "/tools/verible-verilog-format"))
+
+;; (add-hook 'verilog-mode-hook #'lsp-deferred)
+
+
+
+
+;;; aki_cpp_clean.el ends here
