@@ -4,15 +4,17 @@
 
 
 
-
 ;;(server-start)
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+;			 ("org" . "https://orgmode.org/elpa/")
+			 ("elpa" . "https://elpa.gnu.org/packages/")))
 
 
 ;; change to home dirctory so that emacs doesnt launch from chocolatey shim location
 (cd "~/")
 
 ;; default font
-(set-face-attribute 'default nil :family "Fira Code Retina" :height 110)
+;;(set-face-attribute 'default nil :family "Fira Code Retina" :height 110)
 
 
 
@@ -21,6 +23,8 @@
 ;; refresh packages everytime we open emacs (hopefully)
 (unless package-archive-contents
   (package-refresh-contents))
+
+
 
 ;; setup auto-revert behavior for all file buffers as well as dired buffers
 (global-auto-revert-mode)
@@ -62,8 +66,14 @@ Return nil if there isn't one."
 
 
 
-;; keybindings
+;;;; keybindings
+
 (global-set-key (kbd "M-o") 'other-window)
+
+;;; wrap highlighted regions in quotes
+;;; or remove quotes around expression
+(global-set-key (kbd "M-\"") 'insert-pair)
+(global-set-key (kbd "M-\\") 'delete-pair)
 
 
 
@@ -86,11 +96,14 @@ Return nil if there isn't one."
 
 ;; install pacakges (general)
 ;; themes
-;(straight-use-package 'doom-themes)
+(straight-use-package 'doom-themes)
 (straight-use-package 'inkpot-theme)
 (straight-use-package 'sublime-themes)
 
-;;(load-theme 'inkpot) 
+(load-theme 'doom-badger)
+
+
+
 
 ;; git, helm, hippie expand
 (straight-use-package 'magit)
@@ -103,15 +116,16 @@ Return nil if there isn't one."
 (straight-use-package 'gnu-elpa-keyring-update)
 
 ;; packages for programming
-(straight-use-package 'powershell)
-(straight-use-package 'gnuplot)
+;(straight-use-package 'powershell)
+;(straight-use-package 'gnuplot)
 (straight-use-package 'yasnippet)
 (straight-use-package 'yasnippet-snippets)
 (straight-use-package 'yasnippet-classic-snippets)
 (straight-use-package 'projectile)
 ;(straight-use-package 'org-projectile)
-(straight-use-package 'unicode-math-input)
-(straight-use-package 'spice-mode)
+;(straight-use-package 'unicode-math-input)
+;(straight-use-package 'spice-mode)
+(straight-use-package 'paredit)		;for parentheses auto-matching
 
 ;; company general packages
 (straight-use-package 'company)		;"complete-anything" when it works..
@@ -121,12 +135,14 @@ Return nil if there isn't one."
 (straight-use-package 'company-c-headers)
 (straight-use-package 'company-native-complete)
 
+
+
 ;; pretty icon packages
 (straight-use-package 'treemacs)
 (straight-use-package 'all-the-icons)
 (straight-use-package 'all-the-icons-dired)
 ;(straight-use-package 'treemacs-all-the-icons)
-(straight-use-package 'parrot)
+;(straight-use-package 'parrot)
 
 ;; misc
 (straight-use-package 'which-key)	;helps to keep track of keybindings.
@@ -141,28 +157,28 @@ Return nil if there isn't one."
 
 
 ;; lsp-mode packages (fuck irony-mode)
-(straight-use-package 'lsp-mode)
-(straight-use-package 'lsp-ui)
-(straight-use-package 'lsp-treemacs)
-(straight-use-package 'helm-lsp)
-(straight-use-package 'dap-mode)
-(straight-use-package 'ccls)
+;(straight-use-package 'lsp-mode)
+;(straight-use-package 'lsp-ui)
+;(straight-use-package 'lsp-treemacs)
+;(straight-use-package 'helm-lsp)
+;(straight-use-package 'dap-mode)
+;(straight-use-package 'ccls)
 
 ;; company-tabnine
-(straight-use-package 'company-tabnine)
+;(straight-use-package 'company-tabnine)
 
 ;; Specific Helm mode packages
-;;(straight-use-package 'helm-company)
-(straight-use-package 'helm-file-preview)
+(straight-use-package 'helm-company)
+;(straight-use-package 'helm-file-preview)
 (straight-use-package 'helm-flycheck)
 (straight-use-package 'helm-gtags)
-(straight-use-package 'helm-org)
+;(straight-use-package 'helm-org)
 (straight-use-package 'helm-projectile)
 (straight-use-package 'helm-ag)
 (straight-use-package 'helm-c-yasnippet)
 
 ;; org mode packages
-(straight-use-package 'ox-mediawiki)
+;(straight-use-package 'ox-mediawiki)
 ;; (straight-use-package 'org)
 ;; (straight-use-package 'org-superstar)
 ;; (straight-use-package 'org-beautify-theme)
@@ -191,32 +207,67 @@ Return nil if there isn't one."
 
 
 ;; for python mode. Ive given up modularizing this file a long time ago.
-(straight-use-package 'elpy)
-(straight-use-package 'company-jedi)
-(straight-use-package 'company-anaconda)
-(straight-use-package 'anaconda-mode)
+;(straight-use-package 'elpy)
+;(straight-use-package 'company-jedi)
+;(straight-use-package 'company-anaconda)
+;(straight-use-package 'anaconda-mode)
 
 
 
 ;;;; End of package installations
 
 
+
+;; projectile setup
+;(projectile-mode +1)
+;(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+
+
+
+
+
+
+;; cedet setup
+(semantic-mode 1)
+(global-ede-mode 1)
+
+(defun my-semantic-hook ()
+  "Add imenu integration to semantic."
+  (imenu-add-to-menubar "TAGS"))
+(add-hook 'semantic-init-hooks 'my-semantic-hook)
+(global-semantic-idle-scheduler-mode 1)
+(semantic-add-system-include "/home/usr/include/")
+(semantic-add-system-include "/usr/include/")
+(semantic-add-system-include "/usr/include/c++/")
+
+
+
+
+
 ;; Enable elpy
-(elpy-enable)
+;(elpy-enable)
 
 
 ;; enable helm globally
 (helm-mode 1)
 
+
+
+
+
+
+
+
 ;; company backends for python
-(defun my-python-mode-hook ()
-  (add-to-list 'company-backends 'company-anaconda))
+;(defun my-python-mode-hook ()
+;  (add-to-list 'company-backends 'company-anaconda))
   
   
 
-(add-hook 'python-mode-hook 'my-python-mode-hook)
-(add-hook 'python-mode-hook 'anaconda-mode)
-(add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+;(add-hook 'python-mode-hook 'my-python-mode-hook)
+;(add-hook 'python-mode-hook 'anaconda-mode)
+;(add-hook 'python-mode-hook 'anaconda-eldoc-mode)
  
 
 
@@ -234,33 +285,26 @@ Return nil if there isn't one."
 ;; point to path of hunspell dictionaries (Arch)
 ;; dictionary was manually downloaded and place at
 ;; ~/Library/Spelling.
-(setenv
- "DICPATH"
- (concat (getenv "HOME") "/Library/Spelling"))
+;; (setenv
+;;  "DICPATH"
+;;  (concat (getenv "HOME") "/Library/Spelling"))
 
 
-					;(setq ispell-program-name "C://Hunspell//bin//hunspell.exe") ; Windows path
-(setq ispell-program-name "/usr/bin/hunspell") ;Arch distro path
-(setq ispell-local-dictionary "en_US")
-
-
-
-
-
-;; add melpa repo
-;;; Code:
-
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-;			 ("org" . "https://orgmode.org/elpa/")
-			 ("elpa" . "https://elpa.gnu.org/packages/")))
+;; 					;(setq ispell-program-name "C://Hunspell//bin//hunspell.exe") ; Windows path
+;; (setq ispell-program-name "/usr/bin/hunspell") ;Arch distro path
+;; (setq ispell-local-dictionary "en_US")
 
 
 
-;; parrot-mode animation
-(require 'parrot)
-(parrot-mode)
-(global-set-key (kbd "C-c C-p") 'parrot-rotate-prev-word-at-point)
-(global-set-key (kbd "C-c C-n") 'parrot-rotate-next-word-at-point)
+
+
+;
+
+
+
+
+
+
 
 ;; enable which-key globally
 (add-hook 'after-init-hook 'which-key-mode)
@@ -289,8 +333,8 @@ Return nil if there isn't one."
 ;;(define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol)
 
 ;; dap-mode
-(require 'ccls)
-(require 'dap-cpptools)
+;(require 'ccls)
+;(require 'dap-cpptools)
 
 ;; active hydra whenever program hits breakpoint
 (add-hook 'dap-stopped-hook (lambda (arg)
@@ -302,7 +346,7 @@ Return nil if there isn't one."
 
 
 (require 'flx-ido)
-(ido-mode 1)
+;(ido-mode 1)
 (flx-ido-mode 1)
 (setq ido-everywhere nil)
 ;; disable ido faces to see flx highlights
@@ -343,18 +387,18 @@ Return nil if there isn't one."
 (require 'helm)
 (require 'helm-config)
 
-;; use helm for finding other buffers
-;; improve system default commands with helm counterparts
-(global-set-key (kbd "C-x b") 'helm-buffers-list)
-(global-set-key (kbd "C-x r b") 'helm-bookmarks)
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+; use helm for finding other buffers
+; improve system default commands with helm counterparts
+ (global-set-key (kbd "C-x b") 'helm-buffers-list)
+ (global-set-key (kbd "C-x r b") 'helm-bookmarks)
+ (global-set-key (kbd "M-x") 'helm-M-x)
+ (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 
-;; helm-swoop
-(global-set-key (kbd "M-i") 'helm-swoop)
+;; ;; helm-swoop
+ (global-set-key (kbd "M-i") 'helm-swoop)
 
 ;; helm-company setup
-;;(autoload 'helm-company "helm-company")
+(autoload 'helm-company "helm-company")
 (eval-after-load 'company
   '(progn
      (define-key company-mode-map (kbd "C-:") 'helm-company)
@@ -362,8 +406,8 @@ Return nil if there isn't one."
 
 
 ;;helm file preview setup
-(require 'helm-file-preview)
-(helm-file-preview-mode 1)
+;(require 'helm-file-preview)
+;(helm-file-preview-mode 1)
 
 
 ;; helm-flycheck setup
@@ -397,15 +441,15 @@ Return nil if there isn't one."
 ;(add-to-list 'helm-completing-read-handlers-alist '(org-set-tags . helm-org-completing-read-tags))
 
 
-;; better general company-mode settings
+; better general company-mode settings
 (setq company-show-numbers t)
 (company-quickhelp-mode)
 (setq company-minimum-prefix-length 1
-      company-idle-delay 0.1)		;Default is 0.2
+      company-idle-delay 0.2)		;Default is 0.2
 
 
 ;; PROJECTILE and helm-projectile setup
-(load (aki-get-fullpath "setup-projectile"))
+;;(load (aki-get-fullpath "setup-projectile"))
 ;;;; HELM SETUP end
 
 ;;;; COMPANY MODE SETUP start
@@ -444,25 +488,17 @@ Return nil if there isn't one."
 (require 'company-c-headers)
 (add-to-list 'company-backends 'company-c-headers)
 ;; only valid for for arch on desktop
-;(add-to-list 'company-c-headers-path-system "/usr/iinclude/c++/10.2.0")
+(add-to-list 'company-c-headers-path-system "/usr/include/c++/11.1.0/")
 ;only valid for windows on surface
 ;; (add-to-list 'company-c-headers-path-system  "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\lib\\gcc\\x86_64-w64-mingw32\\8.1.0\\include\\c++")
 ;; company mode setup end
 
-
-(defun ede-object-system-include-path ()
-  "Return the system include path for the current buffer."
-  (when ede-object
-    (ede-system-include-path ede-object)))
 
 
 ;; nope, dont uncomment
 ;;(set 'company-c-headers-path-system "/usr/include/c++/11.1.0/")
 
 
-;; projectile setup
-(projectile-mode +1)
-(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
 
 
@@ -501,26 +537,15 @@ Return nil if there isn't one."
 (global-set-key [f5] 'code-compile)
 
 
-;; cedet setup
-(semantic-mode 1)
-(global-ede-mode 1)
+ 
 
 
 
 
-(defun my-semantic-hook ()
-  "Add imenu integration to semantic."
-  (imenu-add-to-menubar "TAGS"))
-(add-hook 'semantic-init-hooks 'my-semantic-hook)
-(global-semantic-idle-summary-mode 1)
 
 
-;; add matlab-emacs mode files to load-path
-;(add-to-list 'load-path "~/matlab-emacs-src/")
 
-;(add-to-list 'load-path "C:\\Users\\Eric\\AppData\\Roaming\\matlab-emacs-mode\\matlab-emacs-src\\") ;value for Desktop (Windows OS)
-;(load-library "matlab-load")
-;(matlab-cedet-setup)
+
 
 (eval-after-load 'c++-mode
   '(define-key c++-mode-map [f9] 'dap-add-breakpoint))
@@ -544,27 +569,6 @@ Return nil if there isn't one."
 
 
 ;;;
-
-
-
-
-;;; Commentary:
-;; 
-
-;; (defun code-run ()
-;;   "This function instead runs the code using the same basic function
-;; structure as code-compile. The file is assumed to have the same base
-;; name but with extension .exe. For example: foo.cpp is compiled and
-;; executable is assumed to be foo.exe"
-;;   (interactive)
-;;   (set (make-local-variable 'compile-command)
-;; 	(concat (file-name-sans-extension buffer-file-name)
-;; 		".exe"))
-;;   (compile compile-command))
-
-;; ;; set code-run to f5's neighbor
-;; (global-set-key [f6] 'code-run)
-
 
 
 
@@ -598,14 +602,14 @@ converted to PDF at the same location."
 
 
 
-(setq path-to-ctags "/usr/local/bin/ctags")
+;;(setq path-to-ctags "/usr/local/bin/ctags")
 
 
-(defun create-tags (dir-name)
-  "Create tags file."
-  (interactive "DDirectory: ")
-  (shell-command
-   (format "%s -f TAGS -e -R %s" path-to-ctags (directory-file-name dir-name))))
+;; (defun create-tags (dir-name)
+;;   "Create tags file."
+;;   (interactive "DDirectory: ")
+;;   (shell-command
+;;    (format "%s -f TAGS -e -R %s" path-to-ctags (directory-file-name dir-name))))
 
 
 
@@ -640,3 +644,13 @@ converted to PDF at the same location."
 
 
 ;;; aki_cpp_clean.el ends here
+
+
+
+
+
+
+
+
+
+

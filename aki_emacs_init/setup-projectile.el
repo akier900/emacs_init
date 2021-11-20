@@ -7,20 +7,20 @@
 ;;; code
 
 ;; helm-projectile setup
-(require 'helm-projectile)
-(helm-projectile-on)
+;(require 'helm-projectile)
+;(helm-projectile-on)
 
 
 ;; other options are
 ;; default, recentf, recently-active, access-time
-(setq projectile-sort-order 'modification-time)
+;(setq projectile-sort-order 'modification-time)
 
 ;; open top level in dired once project has been selected
-(setq projectile-switch-project-action #'projectile-dired)
-(setq projectile-find-dir-includes-top-level 1)
+;(setq projectile-switch-project-action #'projectile-dired)
+;(setq projectile-find-dir-includes-top-level 1)
 
 ;; make projectile use better fd command (available thru chocolatey
-(setq projectile-generic-command "fd . -type f -print0")
+;(setq projectile-generic-command "fd . -type f -print0")
 
 
 

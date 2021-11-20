@@ -6,10 +6,10 @@
 ;;======================================================================
 
 ;;; Code:
-(require 'company)
-(add-hook 'after-init-hook 'global-company-mode)
-(require 'company-box)
-(add-hook 'after-init-hook 'company-box-mode)
+;(require 'company)
+;n(add-hook 'after-init-hook 'global-company-mode)
+;(require 'company-box)
+;(add-hook 'after-init-hook 'company-box-mode)
 
 
 (add-hook 'anaconda-mode-hook

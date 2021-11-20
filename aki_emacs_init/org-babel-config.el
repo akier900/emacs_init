@@ -1,59 +1,61 @@
-;; org mode setup
-(require 'org)
+;; ;; org mode setup
+;; (require 'org)
 
-(setq org-startup-with-inline-images t)
+;; (setq org-startup-with-inline-images t)
 
-;; create intermediate states for TODO items
-(setq org-todo-keywords
-      '((sequence "TODO" "IN-PROGRESS" "REVIEW" "DONE")))
+;; ;; create intermediate states for TODO items
+;; (setq org-todo-keywords
+;;       '((sequence "TODO" "IN-PROGRESS" "REVIEW" "DONE")))
 
-;; make bold font red in org-mode since sometimes fontification seems lacking
-(add-to-list 'org-emphasis-alist
-	     '("*" (:foreground "red")))
+;; ;; make bold font red in org-mode since sometimes fontification seems lacking
+;; (add-to-list 'org-emphasis-alist
+;; 	     '("*" (:foreground "red")))
 
-(add-to-list 'org-emphasis-alist
-	     '("/" (:foreground "yellow")))
+;; (add-to-list 'org-emphasis-alist
+;; 	     '("/" (:foreground "yellow")))
 
-;; stop asking for confirmation everytime I wanna eval some src code block
-(setq org-confirm-babel-evaluate nil)
+;; ;; stop asking for confirmation everytime I wanna eval some src code block
+;; (setq org-confirm-babel-evaluate nil)
 
 
-;; fontify code in code blocks
-(setq org-src-fontify-natively t)
+;; ;; fontify code in code blocks
+;; (setq org-src-fontify-natively t)
 
-;; hide emphasis marks.
-(setq org-hide-emphasis-markers t)
+;; ;; hide emphasis marks.
+;; (setq org-hide-emphasis-markers t)
 
-(require 'org-gcal)
-(require 'org-make-toc)
+;; (require 'org-gcal)
+;; (require 'org-make-toc)
 
-;; org-rich-yank setup
-(require 'org-rich-yank)
-(eval-after-load 'org
-  '(define-key org-mode-map (kbd "C-M-y") #'org-rich-yank))
+;; ;; org-rich-yank setup
+;; (require 'org-rich-yank)
+;; (eval-after-load 'org
+;;   '(define-key org-mode-map (kbd "C-M-y") #'org-rich-yank))
 
 	 
-;; org-superstar (org-bullets descendant
-(require 'org-superstar)
-(add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
+;; ;; org-superstar (org-bullets descendant
+;; (require 'org-superstar)
+;; (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
 
 
 
-;; Active Babel languages
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((R . t)	
-   (emacs-lisp . t)
-   (python . t)
-   (C . t)
-   (octave . t)))
+;; ;; Active Babel languages
+;; (org-babel-do-load-languages
+;;  'org-babel-load-languages
+;;  '((R . t)	
+;;    (emacs-lisp . t)
+;;    (python . t)
+;;    (C . t)
+;;    (octave . t)))
 
 
 
 
 
-;; setup mathml converter (using LaTeXML installed with chocolatey)
-(setq org-latex-to-mathml-convert-command
-      "latexmlmath \"%i\" --presentationmathml=%o")
+;; ;; setup mathml converter (using LaTeXML installed with chocolatey)
+;; (setq org-latex-to-mathml-convert-command
+;;       "latexmlmath \"%i\" --presentationmathml=%o")
 
 ;;;org-babel-config.el
+
+
